@@ -8,5 +8,21 @@ __contact__ = {
 
 
 from .api_client import PanelAppHealthSystem, PanelAppClient, PanelAppPanelId
+from .panelapp_processors import (
+    PanelAppEntityType,
+    PanelAppGelStatus,
+    PanelAppEntity,
+    PanelAppPanelMetadata,
+    PanelAppPanel,
+)
 
-__all__ = ["PanelAppHealthSystem", "PanelAppPanelId", "PanelAppClient"]
+__all__ = [
+    "PanelAppHealthSystem",
+    "PanelAppPanelId",
+    "PanelAppClient",
+    "PanelAppEntityType",
+    "PanelAppGelStatus",
+    "PanelAppPanelMetadata",
+    "PanelAppEntity",
+    "PanelAppPanel",
+]
