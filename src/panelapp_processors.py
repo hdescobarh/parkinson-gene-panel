@@ -53,7 +53,7 @@ class PanelAppEntity:
     entity_name: str
     entity_type: PanelAppEntityType
     confidence_level: PanelAppGelStatus
-    genomic_coordinates: GenomicCoordinates
+    genomic_coordinates: GenomicCoordinates | None
     other_data: Optional[dict[str, str]]
 
     @classmethod
@@ -80,13 +80,30 @@ class PanelAppEntity:
     @classmethod
     def __parse_gene_data(
         cls, gene_data: dict[str, Any], entity_name: str
-    ) -> tuple[GenomicCoordinates, dict[str, Any]]:
+    ) -> tuple[GenomicCoordinates | None, dict[str, Any]]:
 
-        # PanelApp v1 uses uses Ensembl/GENCODE annotation
+        other: dict[str, str] = {
+            "hgnc_symbol": gene_data["hgnc_symbol"],
+            "hgnc_id": gene_data["hgnc_id"],
+        }
+
+        # I will add some protective steps given that the API
+        # documentation is not clear about the structure of gene_data.
+
+        # PanelApp v1 uses uses Ensembl/GENCODE annotation.
+        # I have found some gen entities without annotation; for example,
+        # ATXN8 in PanelApp Australia
+
+        if not gene_data["ensembl_genes"]:
+            logging.warning(
+                f"Missing GRCh38 Ensembl coordinates in gene_data for {entity_name}."
+            )
+            return (None, other)
+
         annotation = gene_data["ensembl_genes"]["GRch38"]
 
-        # This is a protective step given that the API documentation is not clear about
-        # the structure of gene_data and if Ensembl version is fixed by API version.
+        # Also there are entries with more than one Ensembl version; for example, in
+        # Genomics England PanelApp SCO2 and CCDC39 for GRCh38 have Ensembl 90 and 107.
         ensembl_versions = list(annotation.keys())
         if len(ensembl_versions) > 1:
             msg_info = f"{entity_name}: {ensembl_versions}"
@@ -98,17 +115,12 @@ class PanelAppEntity:
         else:
             ensembl_version = ensembl_versions[0]  # Make it fails if empty
 
-        other: dict[str, str] = {
-            "annotation_source": f"Ensembl v.{ensembl_version}",
-            "hgnc_symbol": gene_data["hgnc_symbol"],
-            "hgnc_id": gene_data["hgnc_id"],
-        }
-
         # Parse gene location
         coordinates_parts = re.split(r"[:-]", annotation[ensembl_version]["location"])
         genomic_coordinates = GenomicCoordinates(
             coordinates_parts[0], int(coordinates_parts[1]), int(coordinates_parts[2])
         )
+        other["annotation_source"] = f"Ensembl v.{ensembl_version}"
         return (genomic_coordinates, other)
 
 
