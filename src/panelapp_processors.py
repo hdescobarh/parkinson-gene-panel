@@ -125,9 +125,17 @@ class PanelAppPanel:
 
         for entity_type in ["genes", "strs", "regions"]:
             for entry in raw_panel[entity_type]:
-                # TODO raise warning and add behaviour when there is repeated names
+
                 entity = PanelAppEntity.parse_single_entity(entry)
+
+                # AppPanel entity_names should be unique
+                if entity.entity_name in parsed_entities:
+                    logging.error(
+                        f"Duplicated entity: {entity.entity_name}. Check the source."
+                    )
+
                 parsed_entities[entity.entity_name] = entity
+
         return cls(parsed_entities, metadata)
 
     def into_dataframe(self) -> pd.DataFrame:
