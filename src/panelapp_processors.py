@@ -1,11 +1,12 @@
 from __future__ import annotations
-from dataclasses import dataclass, fields
-from typing import Any, Optional
-from enum import Enum
-import warnings
-import re
-import pandas as pd
 
+import re
+import warnings
+from dataclasses import dataclass, fields
+from enum import Enum
+from typing import Any, Optional
+
+import pandas as pd
 
 PanelAppEntityType = Enum(
     "PanelAppEntityType", [("GENE", "gene"), ("STR", "str"), ("CNV", "region")]
@@ -17,7 +18,7 @@ PanelAppGelStatus = Enum(
 
 @dataclass
 class GenomicCoordinates:
-    chr: int
+    chr: str
     start: int
     end: int
     reference: str = "GRCh38"
@@ -51,10 +52,10 @@ class PanelAppEntity:
     entity_type: PanelAppEntityType
     confidence_level: PanelAppGelStatus
     genomic_coordinates: GenomicCoordinates
-    other_data: Optional[dict[Any]]
+    other_data: Optional[dict[str, str]]
 
     @classmethod
-    def parse_single_entity(cls, data):
+    def parse_single_entity(cls, data: dict[str, Any]):
         entity_name = data["entity_name"]
         entity_type = PanelAppEntityType(data["entity_type"])
         confidence_level = PanelAppGelStatus(data["confidence_level"])
@@ -95,16 +96,16 @@ class PanelAppEntity:
         else:
             ensembl_version = ensembl_versions[0]  # Make it fails if empty
 
-        other = {
+        other: dict[str, str] = {
             "annotation_source": f"Ensembl v.{ensembl_version}",
-            "hgnc_symbol": "gene_data.hgnc_symbol",
-            "hgnc_id": "gene_data.hgnc_id",
+            "hgnc_symbol": gene_data["hgnc_symbol"],
+            "hgnc_id": gene_data["hgnc_id"],
         }
 
         # Parse gene location
         coordinates_parts = re.split(r"[:-]", annotation[ensembl_version]["location"])
         genomic_coordinates = GenomicCoordinates(
-            coordinates_parts[0], coordinates_parts[1], coordinates_parts[2]
+            coordinates_parts[0], int(coordinates_parts[1]), int(coordinates_parts[2])
         )
         return (genomic_coordinates, other)
 
@@ -118,7 +119,7 @@ class PanelAppPanel:
     def from_raw_panel(cls, raw_panel: dict[str, Any]) -> PanelAppPanel:
         metadata = PanelAppPanelMetadata.from_dict(raw_panel)
 
-        parsed_entities = dict()
+        parsed_entities: dict[str, PanelAppEntity] = dict()
 
         for entity_type in ["genes", "strs", "regions"]:
             for entry in raw_panel[entity_type]:
