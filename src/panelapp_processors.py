@@ -7,6 +7,7 @@ from enum import Enum
 from typing import Any, Optional
 
 import pandas as pd
+from pandas.api.types import CategoricalDtype
 
 PanelAppEntityType = Enum(
     "PanelAppEntityType", [("GENE", "gene"), ("STR", "str"), ("CNV", "region")]
@@ -159,9 +160,15 @@ class PanelAppPanel:
                     "Name": e.entity_name,
                     "Type": e.entity_type.name,
                     "Status": e.confidence_level.name,
-                    "GRCh38_chr": e.genomic_coordinates.chr,
-                    "GRCh38_start": e.genomic_coordinates.start,
-                    "GRCh38_end": e.genomic_coordinates.end,
+                    "GRCh38_chr": (
+                        e.genomic_coordinates.chr if e.genomic_coordinates else pd.NA
+                    ),
+                    "GRCh38_start": (
+                        e.genomic_coordinates.start if e.genomic_coordinates else pd.NA
+                    ),
+                    "GRCh38_end": (
+                        e.genomic_coordinates.end if e.genomic_coordinates else pd.NA
+                    ),
                     "HGNC_ID": (
                         pd.NA
                         if e.other_data is None
@@ -177,12 +184,20 @@ class PanelAppPanel:
             ]
         )
 
-        df["Type"] = pd.Categorical(
-            df["Type"], categories=[v.name for v in PanelAppEntityType]
-        )
+        type_dtype = CategoricalDtype(categories=[v.name for v in PanelAppEntityType])
+        status_dtype = CategoricalDtype(categories=[v.name for v in PanelAppGelStatus])
 
-        df["Status"] = pd.Categorical(
-            df["Status"], categories=[v.name for v in PanelAppGelStatus]
+        df = df.astype(
+            {
+                "Name": "string",
+                "Type": type_dtype,
+                "Status": status_dtype,
+                "GRCh38_chr": "string",
+                "GRCh38_start": "Int64",
+                "GRCh38_end": "Int64",
+                "HGNC_ID": "string",
+                "HGNC_symbol": "string",
+            }
         )
 
         return df
