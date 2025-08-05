@@ -15,7 +15,8 @@ PanelAppGelStatus = Enum(
     "PanelAppGelStatus", [("GREEN", "3"), ("AMBER", "2"), ("RED", "1"), ("GRAY", "0")]
 )
 
-logging.basicConfig(level=logging.WARNING, format="%(levelname)s: %(message)s")
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.WARNING)
 
 
 @dataclass
@@ -95,7 +96,7 @@ class PanelAppEntity:
         # ATXN8 in PanelApp Australia
 
         if not gene_data["ensembl_genes"]:
-            logging.warning(
+            logger.warning(
                 f"Missing GRCh38 Ensembl coordinates in gene_data for {entity_name}."
             )
             return (None, other)
@@ -110,7 +111,7 @@ class PanelAppEntity:
             message = (
                 f"There are more than one Ensembl release annotation for {msg_info}."
             )
-            logging.warning(message)
+            logger.warning(message)
             ensembl_version = str(max([int(v) for v in ensembl_versions]))
         else:
             ensembl_version = ensembl_versions[0]  # Make it fails if empty
@@ -142,7 +143,7 @@ class PanelAppPanel:
 
                 # AppPanel entity_names should be unique
                 if entity.entity_name in parsed_entities:
-                    logging.error(
+                    logger.error(
                         f"Duplicated entity: {entity.entity_name}. Check the source."
                     )
 
