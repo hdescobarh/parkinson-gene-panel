@@ -1,7 +1,7 @@
 from __future__ import annotations
 
+import logging
 import re
-import warnings
 from dataclasses import dataclass, fields
 from enum import Enum
 from typing import Any, Optional
@@ -14,6 +14,8 @@ PanelAppEntityType = Enum(
 PanelAppGelStatus = Enum(
     "PanelAppGelStatus", [("GREEN", "3"), ("AMBER", "2"), ("RED", "1"), ("GRAY", "0")]
 )
+
+logging.basicConfig(level=logging.WARNING, format="%(levelname)s: %(message)s")
 
 
 @dataclass
@@ -91,7 +93,7 @@ class PanelAppEntity:
             message = (
                 f"There are more than one Ensembl release annotation for {msg_info}."
             )
-            warnings.warn(message)
+            logging.warning(message)
             ensembl_version = str(max([int(v) for v in ensembl_versions]))
         else:
             ensembl_version = ensembl_versions[0]  # Make it fails if empty
