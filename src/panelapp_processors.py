@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 import re
-from dataclasses import dataclass, fields
+from dataclasses import dataclass, field, fields
 from enum import Enum
 from typing import Any, Optional
 
@@ -130,6 +130,7 @@ class PanelAppEntity:
 class PanelAppPanel:
     entities: dict[str, PanelAppEntity]
     metadata: PanelAppPanelMetadata
+    df: pd.DataFrame = field(init=False)
 
     @classmethod
     def from_raw_panel(cls, raw_panel: dict[str, Any]) -> PanelAppPanel:
@@ -152,7 +153,10 @@ class PanelAppPanel:
 
         return cls(parsed_entities, metadata)
 
-    def into_dataframe(self) -> pd.DataFrame:
+    def __post_init__(self):
+        self.df = self.__fill_dataframe()
+
+    def __fill_dataframe(self) -> pd.DataFrame:
 
         df = pd.DataFrame(
             [
