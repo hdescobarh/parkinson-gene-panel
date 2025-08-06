@@ -17,7 +17,7 @@ PanelAppGelStatus = Enum(
 )
 
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.WARNING)
+logger.setLevel(logging.INFO)
 
 
 @dataclass
@@ -205,3 +205,127 @@ class PanelAppPanel:
         )
 
         return df
+
+
+@dataclass
+class PanelAppMerged:
+    df: pd.DataFrame
+    name_left: str
+    name_right: str
+    suffix_left: str
+    suffix_right: str
+    base_col_names: list[str]
+    conflicts: dict[str, pd.DataFrame] = field(init=False)
+
+    @classmethod
+    def new(
+        cls,
+        panel1: PanelAppPanel,
+        panel2: PanelAppPanel,
+        panel1_name: str,
+        panel2_name: str,
+        panel1_suffix: str,
+        panel2_suffix: str,
+    ):
+        merged_df = pd.merge(
+            panel1.df,
+            panel2.df,
+            how="outer",
+            on="Name",
+            suffixes=[panel1_suffix, panel2_suffix],
+            indicator=True,
+            validate="one_to_one",
+        )
+
+        # Preserve only the entities with a 🟢 GREEN status
+        # (i.e., suitable for clinical interpretation) in at least one panel.
+        merged_df = merged_df[
+            (
+                (merged_df[f"Status{panel1_suffix}"] == "GREEN")
+                | (merged_df[f"Status{panel2_suffix}"] == "GREEN")
+            )
+        ]
+
+        base_col_names = [col_name for col_name in panel1.df.columns]
+
+        return cls(
+            merged_df,
+            panel1_name,
+            panel2_name,
+            panel1_suffix,
+            panel2_suffix,
+            base_col_names,
+        )
+
+    def __post_init__(self):
+        self.find_conflicts()
+
+    def find_conflicts(self):
+        self.conflicts = dict()
+
+        logger.info("FIND CONFLICTS START.")
+
+        for col_name in self.base_col_names:
+            if col_name == "Name":
+                continue
+
+            logger.info(f"Checking conflicts for {col_name}...")
+
+            col_conflicts = self.df[
+                (self.df["_merge"] == "both")
+                & (
+                    self.df[f"{col_name}{self.suffix_left}"]
+                    != self.df[f"{col_name}{self.suffix_right}"]
+                )
+            ]
+            if col_conflicts.empty:
+                logger.info("NOT found conflicts.")
+                continue
+
+            logger.warning(f"Conflicts found ({col_name}).")
+            self.conflicts[col_name] = col_conflicts
+
+        logger.info(
+            f"Columns with conflicts: ({len(self.conflicts)}) {list(self.conflicts.keys())}"
+        )
+        logger.info("FIND CONFLICTS END.")
+
+    def make_consensus(
+        self, custom_include: list[str], update_conflicts: bool = False
+    ) -> pd.DataFrame:
+
+        if update_conflicts:
+            logger.info("Updating conflicts...")
+            self.find_conflicts()
+
+        logger.info("MAKE CONSENSUS START.")
+        logger.info("Copying unconflicted...")
+
+        # For unconflicted fields, fill <NA> / NaN left values with right values
+
+        consensus_col_names = ["Name"] + custom_include
+        unconflicted_suffixed_col_names = consensus_col_names.copy()
+
+        for col_name in self.base_col_names:
+            if col_name == "Name" or col_name in self.conflicts.keys():
+                continue
+
+            col_name_left = f"{col_name}{self.suffix_left}"
+            col_name_right = f"{col_name}{self.suffix_right}"
+
+            consensus_col_names.append(col_name)
+            unconflicted_suffixed_col_names.append(col_name_left)
+
+            self.df.loc[self.df["_merge"] == "right_only", col_name_left] = self.df[
+                col_name_right
+            ]
+
+        logger.info("Creating new DataFrame...")
+        consensus_panel_df = (
+            self.df[unconflicted_suffixed_col_names].reset_index(drop=True).copy()
+        )
+        consensus_panel_df.columns = consensus_col_names
+
+        logger.info("MAKE CONSENSUS END.")
+
+        return consensus_panel_df
