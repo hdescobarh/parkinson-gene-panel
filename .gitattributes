@@ -1,0 +1,65 @@
+# Auto detect text files and perform LF normalization
+* text=auto eol=lf
+
+
+# Source code
+## Web
+*.js       text eol=lf
+*.jsx      text eol=lf
+*.ts       text eol=lf
+*.tsx      text eol=lf
+## Windows scripts
+*.bat      text eol=crlf
+*.cmd      text eol=crlf
+*.ps1      text eol=crlf
+## Unix-like scripts
+*.bash     text eol=lf diff=bash
+*.sh       text eol=lf diff=bash
+*.zsh      text eol=lf diff=bash
+## Serialization and configuration
+*.json             text eol=lf
+*.toml             text eol=lf
+*.xml              text eol=lf
+*.yaml             text eol=lf
+*.yml              text eol=lf
+.editorconfig      text eol=lf
+.gitattributes     text eol=lf
+.gitconfig         text eol=lf
+package.json       text eol=lf
+package-lock.json  text linguist-vendored
+tsconfig.json      linguist-language=JSON-with-Comments
+yarn.lock          linguist-vendored
+
+# Docs
+## Misc
+*.md         text eol=lf diff=markdown
+*.mdx        text eol=lf diff=markdown
+*.ipynb      text eol=lf
+*.pdf -diff
+## tex
+*.bibtex     text diff=bibtex
+*.tex        text diff=tex
+## Data
+*.csv        text eol=crlf
+*.tsv        text
+## Simple text
+*.txt        text
+*LICENSE*    text
+
+
+# Denote all files that are truly binary and should not be modified.
+# Older git versions try to fix line endings on images and fonts, this prevents it.
+## SVG
+*.svg       text
+## Images
+*.png       binary
+*.gif       binary
+*.ico       binary
+*.wbmp      binary
+*.webp      binary
+*.jpg       binary
+*.jpeg      binary
+## Fonts
+*.ttf       binary
+*.woff      binary
+*.woff2     binary
