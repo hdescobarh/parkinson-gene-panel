@@ -293,39 +293,41 @@ class PanelAppMerged:
     def make_consensus(
         self, custom_include: list[str], update_conflicts: bool = False
     ) -> pd.DataFrame:
-
         if update_conflicts:
             logger.info("Updating conflicts...")
             self.find_conflicts()
 
         logger.info("MAKE CONSENSUS START.")
+
+        # Merge in a single base col_name fields without conflicts
         logger.info("Copying unconflicted...")
-
-        # For unconflicted fields, fill <NA> / NaN left values with right values
-
         consensus_col_names = ["Name"] + custom_include
-        unconflicted_suffixed_col_names = consensus_col_names.copy()
 
         for col_name in self.base_col_names:
             if col_name == "Name" or col_name in self.conflicts.keys():
                 continue
 
-            col_name_left = f"{col_name}{self.suffix_left}"
-            col_name_right = f"{col_name}{self.suffix_right}"
-
             consensus_col_names.append(col_name)
-            unconflicted_suffixed_col_names.append(col_name_left)
 
-            self.df.loc[self.df["_merge"] == "right_only", col_name_left] = self.df[
-                col_name_right
-            ]
+            self.df[col_name] = self.df.apply(
+                self.__unconflicted_consensus,
+                axis=1,
+                args=[
+                    f"{col_name}{self.suffix_left}",
+                    f"{col_name}{self.suffix_right}",
+                ],
+            )
 
         logger.info("Creating new DataFrame...")
-        consensus_panel_df = (
-            self.df[unconflicted_suffixed_col_names].reset_index(drop=True).copy()
-        )
-        consensus_panel_df.columns = consensus_col_names
+        consensus_panel_df = self.df[consensus_col_names].reset_index(drop=True).copy()
 
         logger.info("MAKE CONSENSUS END.")
-
         return consensus_panel_df
+
+    def __unconflicted_consensus(
+        self, row: pd.Series, col_name_left: str, col_name_right: str
+    ):
+        if row["_merge"] == "right_only":
+            return row[col_name_right]
+        else:
+            return row[col_name_left]
