@@ -16,6 +16,20 @@ PanelAppGelStatus = Enum(
     "PanelAppGelStatus", [("GREEN", "3"), ("AMBER", "2"), ("RED", "1"), ("GRAY", "0")]
 )
 
+PANEL_BASE_DTYPES = {
+    "Name": "string",
+    "Type": CategoricalDtype(categories=[v.name for v in PanelAppEntityType]),
+    "Status": CategoricalDtype(categories=[v.name for v in PanelAppGelStatus]),
+    "GRCh38_chr": CategoricalDtype(
+        categories=[str(i) for i in range(1, 23)] + ["X", "Y", "MT"], ordered=True
+    ),
+    "GRCh38_start": "Int64",
+    "GRCh38_end": "Int64",
+    "HGNC_ID": "string",
+    "HGNC_symbol": "string",
+}
+
+
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
@@ -188,21 +202,7 @@ class PanelAppPanel:
             ]
         )
 
-        type_dtype = CategoricalDtype(categories=[v.name for v in PanelAppEntityType])
-        status_dtype = CategoricalDtype(categories=[v.name for v in PanelAppGelStatus])
-
-        df = df.astype(
-            {
-                "Name": "string",
-                "Type": type_dtype,
-                "Status": status_dtype,
-                "GRCh38_chr": "string",
-                "GRCh38_start": "Int64",
-                "GRCh38_end": "Int64",
-                "HGNC_ID": "string",
-                "HGNC_symbol": "string",
-            }
-        )
+        df = df.astype(PANEL_BASE_DTYPES)
 
         return df
 
@@ -246,7 +246,7 @@ class PanelAppMerged:
             )
         ]
 
-        base_col_names = [col_name for col_name in panel1.df.columns]
+        base_col_names = [col_name for col_name in PANEL_BASE_DTYPES.keys()]
 
         return cls(
             merged_df,
