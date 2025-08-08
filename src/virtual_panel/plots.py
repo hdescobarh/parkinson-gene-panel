@@ -3,7 +3,8 @@ import matplotlib.ticker as ticker
 import pandas as pd
 import seaborn as sns
 from matplotlib_venn import venn2
-from panelapp_processors import PanelAppMerged
+
+from .panelapp_processors import PanelAppMerged
 
 
 def plot_merged_venn_diagram(panel: PanelAppMerged, ax=None):

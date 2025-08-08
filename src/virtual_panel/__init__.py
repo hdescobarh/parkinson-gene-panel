@@ -9,6 +9,7 @@ __contact__ = {
 
 from .api_client import PanelAppClient, PanelAppHealthSystem, PanelAppPanelId
 from .panelapp_processors import PanelAppMerged, PanelAppPanel
+from .plots import count_plot, plot_merged_venn_diagram
 
 __all__ = [
     "PanelAppHealthSystem",
@@ -16,4 +17,6 @@ __all__ = [
     "PanelAppClient",
     "PanelAppPanel",
     "PanelAppMerged",
+    "plot_merged_venn_diagram",
+    "count_plot",
 ]
