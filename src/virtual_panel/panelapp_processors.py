@@ -316,7 +316,7 @@ class PanelAppMerged:
                     f"{col_name}{self.suffix_left}",
                     f"{col_name}{self.suffix_right}",
                 ],
-            )
+            ).astype(PANEL_BASE_DTYPES.get(col_name, "object"))
 
         logger.info("Creating new DataFrame...")
         consensus_panel_df = self.df[consensus_col_names].reset_index(drop=True).copy()
