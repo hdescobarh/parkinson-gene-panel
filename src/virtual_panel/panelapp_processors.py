@@ -306,7 +306,7 @@ class PanelAppMerged:
                 f"Status{self.suffix_left}",
                 f"Status{self.suffix_right}",
             ]
-        ].to_feather(f"{dir}/{filename}.feather")
+        ].reset_index(drop=True).to_feather(f"{dir}/{filename}.feather")
         logger.info("Saving Status conflicts: Done!")
         return True
 
