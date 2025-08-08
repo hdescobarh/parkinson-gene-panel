@@ -290,7 +290,9 @@ class PanelAppMerged:
         )
         logger.info("FIND CONFLICTS END.")
 
-    def save_status_conflicts(self, location: str) -> bool:
+    def save_status_conflicts(
+        self, dir: str, filename: str = "status_conflicts"
+    ) -> bool:
         status_conflicts_df = self.conflicts.get("Status", None)
 
         if status_conflicts_df is None:
@@ -304,7 +306,7 @@ class PanelAppMerged:
                 f"Status{self.suffix_left}",
                 f"Status{self.suffix_right}",
             ]
-        ].to_feather(f"{location}.feather")
+        ].to_feather(f"{dir}{filename}.feather")
         logger.info("Saving Status conflicts: Done!")
         return True
 
