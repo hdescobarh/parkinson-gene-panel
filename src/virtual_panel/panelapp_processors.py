@@ -320,6 +320,9 @@ class PanelAppMerged:
 
         logger.info("Creating new DataFrame...")
         consensus_panel_df = self.df[consensus_col_names].reset_index(drop=True).copy()
+        consensus_panel_df["Origin"] = self.df.apply(self.__set_origin, axis=1).astype(
+            "category"
+        )
 
         logger.info("MAKE CONSENSUS END.")
         return consensus_panel_df
@@ -331,3 +334,13 @@ class PanelAppMerged:
             return row[col_name_right]
         else:
             return row[col_name_left]
+
+    def __set_origin(self, row: pd.Series):
+        value_right = self.suffix_right.removeprefix("_")
+        value_left = self.suffix_left.removeprefix("_")
+        if row["_merge"] == "right_only":
+            return value_right
+        elif row["_merge"] == "left_only":
+            return value_left
+        else:
+            return "Both"
