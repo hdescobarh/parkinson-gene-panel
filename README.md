@@ -3,7 +3,17 @@
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](./LICENSE)
 [![License: CC BY 4.0](https://img.shields.io/badge/License-CC_BY_4.0-lightgreen.svg)](./LICENSE-CC)
 
-# License
+Hybrid Curation of Virtual Gene Panels for Parkinson's Disease
+
+This project provides a series of Python scripts to partially automate the creation of virtual gene panels. The workflow is designed to be interactive, with Jupyter Notebooks serving as the primary interface for the user to:
+
+Execute the automated steps (e.g., data collection and enrichment).
+
+Perform critical manual tasks, such as reviewing data for conflicts and ensuring suitability for clinical interpretation.
+
+The final result is a curated set of ready-to-use BED files.
+
+## License
 
 This repository uses a dual-license structure:
 
