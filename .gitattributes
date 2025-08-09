@@ -3,6 +3,8 @@
 
 
 # Source code
+## Python
+*.py       text eol=lf diff=python
 ## Web
 *.js       text eol=lf
 *.jsx      text eol=lf
@@ -34,8 +36,7 @@ yarn.lock          linguist-vendored
 ## Misc
 *.md         text eol=lf diff=markdown
 *.mdx        text eol=lf diff=markdown
-*.ipynb      text eol=lf
-*.pdf -diff
+*.ipynb      diff=jupyternotebook merge=jupyternotebook
 ## tex
 *.bibtex     text diff=bibtex
 *.tex        text diff=tex
@@ -51,6 +52,14 @@ yarn.lock          linguist-vendored
 # Older git versions try to fix line endings on images and fonts, this prevents it.
 ## SVG
 *.svg       text
+## General
+*.feather   binary
+*.h5        binary
+*.parquet   binary
+*.pdf       binary
+*.zip       binary
+*.gz        binary
+*.tar       binary
 ## Images
 *.png       binary
 *.gif       binary
