@@ -292,23 +292,27 @@ class PanelAppMerged:
 
     def save_status_conflicts(
         self, dir: str, filename: str = "status_conflicts"
-    ) -> bool:
+    ) -> pd.DataFrame | None:
         status_conflicts_df = self.conflicts.get("Status", None)
 
         if status_conflicts_df is None:
             logger.warning("There are not Status conflicts!")
-            return False
+            return None
 
         logger.info("Saving Status conflicts...")
-        status_conflicts_df[
+
+        df = status_conflicts_df[
             [
                 "Name",
                 f"Status{self.suffix_left}",
                 f"Status{self.suffix_right}",
             ]
-        ].reset_index(drop=True).to_feather(f"{dir}/{filename}.feather")
+        ].reset_index(drop=True)
+
+        df.to_feather(f"{dir}/{filename}.feather")
+
         logger.info("Saving Status conflicts: Done!")
-        return True
+        return df
 
     def default_status_solve(self):
 
