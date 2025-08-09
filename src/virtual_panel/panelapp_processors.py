@@ -310,8 +310,29 @@ class PanelAppMerged:
         logger.info("Saving Status conflicts: Done!")
         return True
 
+    def default_status_solve(self):
+
+        consensus_col_name = "Status_Consensus"
+
+        logger.info("Starting default Status conflict solving strategy...")
+        self.df[consensus_col_name] = self.df.apply(
+            lambda row, col_name_left, col_name_right: (
+                "GREEN" if row[col_name_left] == row[col_name_right] else "MIXED"
+            ),
+            args=[
+                f"Status{self.suffix_left}",
+                f"Status{self.suffix_right}",
+            ],
+            axis=1,
+        )
+
+        self.df[consensus_col_name] = self.df[consensus_col_name].astype("category")
+        logger.info("Default Status conflict solving strategy: End.")
+
     def make_consensus(
-        self, custom_include: list[str], update_conflicts: bool = False
+        self,
+        custom_include: list[str] = ["Status_Consensus"],
+        update_conflicts: bool = False,
     ) -> pd.DataFrame:
         if update_conflicts:
             logger.info("Updating conflicts...")
