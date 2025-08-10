@@ -7,7 +7,7 @@ __contact__ = {
 }
 
 
-from .api_client import PanelAppClient, PanelAppHealthSystem, PanelAppPanelId
+from .api_panelapp import PanelAppClient, PanelAppHealthSystem, PanelAppPanelId
 from .panelapp_processors import PanelAppMerged, PanelAppPanel
 from .plots import count_plot, plot_merged_venn_diagram
 
