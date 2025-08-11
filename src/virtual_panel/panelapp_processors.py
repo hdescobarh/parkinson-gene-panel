@@ -363,11 +363,26 @@ class PanelAppMerged:
                 ],
             ).astype(PANEL_BASE_DTYPES.get(col_name, "object"))
 
-        logger.info("Creating new DataFrame...")
-        consensus_panel_df = self.df[consensus_col_names].reset_index(drop=True).copy()
-        consensus_panel_df["Origin"] = self.df.apply(self.__set_origin, axis=1).astype(
-            "category"
+        logger.info("Adding new columns...")
+
+        origin_left = self.suffix_left.removeprefix("_")
+        origin_right = self.suffix_right.removeprefix("_")
+        self.df["Origin"] = self.df.apply(
+            self.__set_origin, axis=1, args=[origin_left, origin_right]
+        ).astype(
+            CategoricalDtype(
+                [
+                    origin_left,
+                    "Both",
+                    origin_right,
+                ],
+                ordered=True,
+            )
         )
+        consensus_col_names.append("Origin")
+
+        logger.info("Creating consensus DataFrame...")
+        consensus_panel_df = self.df[consensus_col_names].reset_index(drop=True).copy()
 
         logger.info("MAKE CONSENSUS END.")
         return consensus_panel_df
@@ -380,12 +395,10 @@ class PanelAppMerged:
         else:
             return row[col_name_left]
 
-    def __set_origin(self, row: pd.Series):
-        value_right = self.suffix_right.removeprefix("_")
-        value_left = self.suffix_left.removeprefix("_")
+    def __set_origin(self, row: pd.Series, origin_left: str, origin_right: str):
         if row["_merge"] == "right_only":
-            return value_right
+            return origin_right
         elif row["_merge"] == "left_only":
-            return value_left
+            return origin_left
         else:
             return "Both"
