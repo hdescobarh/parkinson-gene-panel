@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[project]
+name = "parkinson-panel-bed"
+version = "0.1.0"
+authors = [{ name = "Hans Escobar", email = "hansescobar@proton.me" }]
+description = "Virtual gene panel integration for Parkinson's Disease. This workflow collects, filters, and enriches gene panels with genomic features from NCBI and pathological variants from ClinVar, producing ready-to-use BED files."
+readme = "README.md"
+license = "Apache-2.0 AND CC-BY-4.0"
+license-files = ["LICENSE.*", "NOTICE"]
+classifiers = [
+  "Topic :: Scientific/Engineering :: Bio-Informatics",
+  "Topic :: Scientific/Engineering :: Medical Science Apps.",
+  "Intended Audience :: Science/Research",
+  "Intended Audience :: Healthcare Industry",
+  "Development Status :: 2 - Pre-Alpha",
+]
+requires-python = ">=3.13.5,<3.14"
+dependencies = [
+  "httpx>=0.28,<0.29",
+  "seaborn>=0.13,<0.14",
+  "pandas[pyarrow]>=2.3,<2.4",
+  "matplotlib-venn>=1.1,<1.2",
+  "jupyterlab>=4.4.5,<4.5",
+]
+
+[project.optional-dependencies]
+dev = ["nbdime"]
