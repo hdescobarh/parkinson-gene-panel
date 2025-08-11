@@ -13,6 +13,20 @@ Perform critical manual tasks, such as reviewing data for conflicts and ensuring
 
 The final result is a curated set of ready-to-use BED files.
 
+## Use
+
+### Local Linux
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+pip install --upgrade pip
+pip install -e .
+pip install -e .[dev]
+nbdime config-git --enable
+jupyter lab --notebook-dir="./notebooks" --ServerApp.token='' --ServerApp.password='' "./notebooks/parkinson_panel_gene_list.ipynb"
+```
+
 ## License
 
 This repository uses a dual-license structure:
