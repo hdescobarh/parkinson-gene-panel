@@ -1,4 +1,3 @@
-__version__ = "0.1.0"
 __author__ = "Hans Escobar"
 __contact__ = {
     "email": "hansescobar@proton.me",
@@ -7,7 +6,9 @@ __contact__ = {
 }
 
 
+from .api_ncbi_datasets import NcbiClient
 from .api_panelapp import PanelAppClient, PanelAppHealthSystem, PanelAppPanelId
+from .ncbi_processors import NcbiDatasetsParser
 from .panelapp_processors import PanelAppMerged, PanelAppPanel
 from .plots import count_plot, plot_merged_venn_diagram
 
@@ -19,4 +20,6 @@ __all__ = [
     "PanelAppMerged",
     "plot_merged_venn_diagram",
     "count_plot",
+    "NcbiClient",
+    "NcbiDatasetsParser",
 ]
