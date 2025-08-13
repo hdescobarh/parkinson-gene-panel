@@ -27,6 +27,7 @@ PANEL_BASE_DTYPES = {
     "GRCh38_end": "Int64",
     "HGNC_ID": "string",
     "HGNC_symbol": "string",
+    "Biotype": "string",
 }
 
 
@@ -101,6 +102,7 @@ class PanelAppEntity:
         other: dict[str, str] = {
             "hgnc_symbol": gene_data["hgnc_symbol"],
             "hgnc_id": gene_data["hgnc_id"],
+            "biotype": gene_data["biotype"],
         }
 
         # I will add some protective steps given that the API
@@ -196,6 +198,11 @@ class PanelAppPanel:
                         pd.NA
                         if e.other_data is None
                         else e.other_data.get("hgnc_symbol", pd.NA)
+                    ),
+                    "Biotype": (
+                        pd.NA
+                        if e.other_data is None
+                        else e.other_data.get("biotype", pd.NA)
                     ),
                 }
                 for e in self.entities.values()
