@@ -89,7 +89,11 @@ class PanelAppEntity:
                 data["grch38_coordinates"][0],
                 data["grch38_coordinates"][1],
             )
-            other_data = None
+            # In the current PanelApp version, the only regions are CNV copy_number_increase and
+            # copy_number_decrease, both of which are children of copy_number_variation
+            # (SO:0001019). Note that PanelApp does not use the SO terminology but instead uses
+            # the custom terms cnv_gain and cnv_loss.
+            other_data = {"biotype": data["type_of_variants"]}
         return cls(
             entity_name, entity_type, confidence_level, genomic_coordinates, other_data
         )
