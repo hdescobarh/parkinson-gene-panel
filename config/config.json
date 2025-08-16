@@ -16,6 +16,7 @@
   },
 
   "dir_paths": {
+    "logging": "logs/",
     "data": {
       "base_path": "data/",
       "raw": "raw/",
