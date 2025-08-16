@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
+set -Eeuo pipefail
+trap 'echo >&2 "$0: Error on line $LINENO: $BASH_COMMAND"; exit $?' ERR
 
 : "${ROOT_DIR:?'Need to set ROOT_DIR before running this script.'}"
+
+source "${ROOT_DIR%/}/scripts/utils.sh"
 
 # #### Load and parse configuration ####
 
@@ -9,29 +13,29 @@ printf "[INFO] Parsing configuration...\n" >&2
 
 export CONFIG_FILE="${ROOT_DIR%/}/config/config.json"
 
-NCBI_ACCESSION=$(jq -r '.reference_genome.ncbi_accession' "$CONFIG_FILE")
-NCBI_NAME=$(jq -r '.reference_genome.ncbi_name' "$CONFIG_FILE")
+NCBI_ACCESSION=$(get_config  '.reference_genome.ncbi_accession')
+NCBI_NAME=$(get_config  '.reference_genome.ncbi_name')
 export ASSEMBLY_TAG="${NCBI_ACCESSION}_${NCBI_NAME}"
 
-LOGGING=$(jq -r '.dir_paths.logging' "$CONFIG_FILE")
+LOGGING=$(get_config  '.dir_paths.logging')
 export LOGS_DIR="${ROOT_DIR%/}/${LOGGING}"
 
-DATA_BASE_PATH=$(jq -r '.dir_paths.data.base_path' "$CONFIG_FILE")
-DATA_RAW=$(jq -r '.dir_paths.data.raw' "$CONFIG_FILE")
-DATA_EXTERNAL=$(jq -r '.dir_paths.data.external' "$CONFIG_FILE")
-DATA_INTERMEDIATE=$(jq -r '.dir_paths.data.intermediate' "$CONFIG_FILE")
-DATA_PROCESSED=$(jq -r '.dir_paths.data.processed' "$CONFIG_FILE")
-DATA_EXTERNAL=$(jq -r '.dir_paths.data.external' "$CONFIG_FILE")
+DATA_BASE_PATH=$(get_config  '.dir_paths.data.base_path')
+DATA_RAW=$(get_config  '.dir_paths.data.raw')
+DATA_EXTERNAL=$(get_config  '.dir_paths.data.external')
+DATA_INTERMEDIATE=$(get_config  '.dir_paths.data.intermediate')
+DATA_PROCESSED=$(get_config  '.dir_paths.data.processed')
+DATA_EXTERNAL=$(get_config  '.dir_paths.data.external')
 
 export RAW_DATA_DIR="${ROOT_DIR%/}/${DATA_BASE_PATH%/}/${DATA_RAW%/}"
 export INTERMEDIATE_DATA_DIR="${ROOT_DIR%/}/${DATA_BASE_PATH%/}/${DATA_INTERMEDIATE%/}"
 export PROCESSED_DATA_DIR="${ROOT_DIR%/}/${DATA_BASE_PATH%/}/${DATA_PROCESSED%/}"
 export EXTERNAL_DATA_DIR="${ROOT_DIR%/}/${DATA_BASE_PATH%/}/${DATA_EXTERNAL%/}"
 
-NOTEBOOKS=$(jq -r '.dir_paths.notebooks' "$CONFIG_FILE")
-REPORTS=$(jq -r '.dir_paths.reports' "$CONFIG_FILE")
-FIGURES=$(jq -r '.dir_paths.figures' "$CONFIG_FILE")
-TABLES=$(jq -r '.dir_paths.tables' "$CONFIG_FILE")
+NOTEBOOKS=$(get_config  '.dir_paths.notebooks')
+REPORTS=$(get_config  '.dir_paths.reports')
+FIGURES=$(get_config  '.dir_paths.figures')
+TABLES=$(get_config  '.dir_paths.tables')
 
 export NOTEBOOKS_DIR="${ROOT_DIR%/}/${NOTEBOOKS%/}"
 export REPORTS_DIR="${ROOT_DIR%/}/${REPORTS%/}"
