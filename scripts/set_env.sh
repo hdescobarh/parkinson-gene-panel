@@ -4,7 +4,10 @@
 
 export LOGS_DIR="${ROOT_DIR%/}/logs"
 
-# Load configuration
+# #### Load and parse configuration ####
+
+# Send to stderr to avoid problems when capturing environment from Python
+printf "[INFO] Parsing configuration...\n" >&2
 
 export CONFIG_FILE="${ROOT_DIR%/}/config/config.json"
 
@@ -34,6 +37,8 @@ export REPORTS_DIR="${ROOT_DIR%/}/${REPORTS%/}"
 export FIGURES_DIR="${ROOT_DIR%/}/${FIGURES%/}"
 export TABLES_DIR="${ROOT_DIR%/}/${TABLES%/}"
 
+# #### Ensure directories exist ####
+
 dirs=(
   "$LOGS_DIR"
 	"$RAW_DATA_DIR"
@@ -46,8 +51,7 @@ dirs=(
 	"$TABLES_DIR"
 )
 
-# TODO: Add .env.tmp file for variables that need to be reused in other environments
-
+printf "[INFO] Creating directories..\n" >&2
 for d in "${dirs[@]}"; do
 	mkdir -p "$d"
 done
