@@ -10,17 +10,9 @@ exec > >(tee "${ROOT_DIR%/}/logs/${0%.*}") 2>&1
 printf "[START] (%s)\n" "$(date)"
 
 source "${ROOT_DIR%/}/scripts/utils.sh"
+source "${ROOT_DIR%/}/scripts/set_env.sh"
 
-# Load configuration
-
-CONFIG_FILE="${ROOT_DIR%/}/config/config.json"
-
-DATA_BASE_PATH=$(jq -r '.dir_paths.data.base_path' "$CONFIG_FILE")
-DATA_RAW=$(jq -r '.dir_paths.data.raw' "$CONFIG_FILE")
-DATA_EXTERNAL=$(jq -r '.dir_paths.data.external' "$CONFIG_FILE")
-
-NCBI_ACCESSION=$(jq -r '.reference_genome.ncbi_accession' "$CONFIG_FILE")
-NCBI_NAME=$(jq -r '.reference_genome.ncbi_name' "$CONFIG_FILE")
+# Generate derived variables
 
 mapfile -t FTP < <(
 	jq -r \
@@ -29,21 +21,16 @@ mapfile -t FTP < <(
     .assembly_report_suffix, .checksums,.uncompressed_checksums' "$CONFIG_FILE"
 )
 
-# TODO: Add a check for FTP length
+# TODO: Add validations to FTP
 
-# Generate derived variables
+assembly_dir="${FTP[0]%/}/${FTP[1]%/}/${ASSEMBLY_TAG}"
+annotations_filename="${ASSEMBLY_TAG}${FTP[2]}"
+report_filename="${ASSEMBLY_TAG}${FTP[3]}"
 
-raw_data_dir="${ROOT_DIR%/}/${DATA_BASE_PATH%/}/${DATA_RAW%/}"
-external_data_dir="${ROOT_DIR%/}/${DATA_BASE_PATH%/}/${DATA_EXTERNAL%/}"
-assembly_tag="${NCBI_ACCESSION}_${NCBI_NAME}"
-assembly_dir="${FTP[0]%/}/${FTP[1]%/}/${assembly_tag}"
-annotations_filename="${assembly_tag}${FTP[2]}"
-report_filename="${assembly_tag}${FTP[3]}"
-
-local_annotations_path="${raw_data_dir}/${annotations_filename}"
-local_report_path="${raw_data_dir}/${report_filename}"
-local_checksum_path="${external_data_dir}/${FTP[4]}"
-local_checksums_compressed_path="${external_data_dir}/${FTP[5]}"
+local_annotations_path="${RAW_DATA_DIR}/${annotations_filename}"
+local_report_path="${RAW_DATA_DIR}/${report_filename}"
+local_checksum_path="${EXTERNAL_DATA_DIR}/${FTP[4]}"
+local_checksums_compressed_path="${EXTERNAL_DATA_DIR}/${FTP[5]}"
 
 # Download checksum files and get hash
 
