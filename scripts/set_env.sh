@@ -13,7 +13,7 @@ NCBI_ACCESSION=$(jq -r '.reference_genome.ncbi_accession' "$CONFIG_FILE")
 NCBI_NAME=$(jq -r '.reference_genome.ncbi_name' "$CONFIG_FILE")
 export ASSEMBLY_TAG="${NCBI_ACCESSION}_${NCBI_NAME}"
 
-LOGGING=$(jq -r 'dir_paths.logging' "$CONFIG_FILE")
+LOGGING=$(jq -r '.dir_paths.logging' "$CONFIG_FILE")
 export LOGS_DIR="${ROOT_DIR%/}/${LOGGING}"
 
 DATA_BASE_PATH=$(jq -r '.dir_paths.data.base_path' "$CONFIG_FILE")
