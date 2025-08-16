@@ -1,0 +1,31 @@
+{
+  "reference_genome": {
+    "ncbi_accession": "GCF_000001405.40",
+    "ncbi_name": "GRCh38.p14"
+  },
+
+  "data_sources": {
+    "ncbi_genomes_ftp": {
+      "site": "ftp.ncbi.nlm.nih.gov/genomes/",
+      "refseq_human_assemblies": "refseq/vertebrate_mammalian/Homo_sapiens/all_assembly_versions/",
+      "genomic_annotations_suffix": "_genomic.gff.gz",
+      "assembly_report_suffix": "_assembly_report.txt",
+      "checksums": "md5checksums.txt",
+      "uncompressed_checksums": "uncompressed_checksums.txt"
+    }
+  },
+
+  "dir_paths": {
+    "data": {
+      "base_path": "data/",
+      "raw": "raw/",
+      "intermediate": "intermediate/",
+      "processed": "processed/",
+      "external": "external/"
+    },
+    "notebooks": "notebooks/",
+    "reports": "reports/",
+    "figures": "reports/figures/",
+    "tables": "reports/tables/"
+  }
+}
