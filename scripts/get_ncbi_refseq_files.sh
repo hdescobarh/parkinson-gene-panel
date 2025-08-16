@@ -9,19 +9,20 @@ source "${ROOT_DIR%/}/scripts/set_env.sh"
 
 # Initialize logging
 
-exec > >(tee "${LOGS_DIR%/}/${0%.*}") 2>&1
-printf "[START] (%s)\n" "$(date)"
+script_name=$(basename "$0")
+exec > >(tee "${LOGS_DIR%/}/${script_name%.*}") 2>&1
+printf "[DOWNLOADS] Start(%s)\n" "$(date)"
 
 # Generate derived variables
 
 mapfile -t FTP < <(
-	jq -r \
+	get_config\
 		'.data_sources.ncbi_genomes_ftp | .site,
     .refseq_human_assemblies, .genomic_annotations_suffix,
-    .assembly_report_suffix, .checksums,.uncompressed_checksums' "$CONFIG_FILE"
+    .assembly_report_suffix, .checksums,.uncompressed_checksums'
 )
 
-# TODO: Add validations to FTP
+# TODO: Need to validate non null for each FTP value
 
 assembly_dir="${FTP[0]%/}/${FTP[1]%/}/${ASSEMBLY_TAG}"
 annotations_filename="${ASSEMBLY_TAG}${FTP[2]}"
@@ -52,4 +53,4 @@ printf "[INFO] Decompressing (%s)...\n" "$(basename "${local_annotations_path}")
 gunzip --keep --force --verbose "${local_annotations_path}"
 validate_md5 "${uncompressed_md5}" "${local_annotations_path%.*}"
 
-printf "[SUCCESSFUL END] (%s)\n" "$(date)"
+printf "[DOWNLOADS] Successful end (%s)\n" "$(date)"
