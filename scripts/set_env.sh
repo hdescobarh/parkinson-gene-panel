@@ -4,16 +4,6 @@
 
 # Load configuration
 
-CONFIG_FILE="${ROOT_DIR%/}/config/config.json"
-DATA_BASE_PATH=$(jq -r '.dir_paths.data.base_path' "$CONFIG_FILE")
-DATA_RAW=$(jq -r '.dir_paths.data.raw' "$CONFIG_FILE")
-DATA_EXTERNAL=$(jq -r '.dir_paths.data.external' "$CONFIG_FILE")
-
-NCBI_ACCESSION=$(jq -r '.reference_genome.ncbi_accession' "$CONFIG_FILE")
-NCBI_NAME=$(jq -r '.reference_genome.ncbi_name' "$CONFIG_FILE")
-
-# Load configuration
-
 export CONFIG_FILE="${ROOT_DIR%/}/config/config.json"
 
 DATA_BASE_PATH=$(jq -r '.dir_paths.data.base_path' "$CONFIG_FILE")
