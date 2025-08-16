@@ -34,3 +34,20 @@ validate_md5() {
 		return 1
 	fi
 }
+
+get_config() {
+    local key=$1
+    local value
+
+    value=$(jq -r "${key}" "${CONFIG_FILE}") || {
+      printf "[ERROR] failed to read %s." "${key}" >&2
+        exit 1
+    }
+
+    if [[ -z "${value}" || "${value}" == "null" ]]; then
+        printf "[ERROR] key %s not found." "${key}" >&2
+        exit 1
+    fi
+
+    echo "${value}"
+}
