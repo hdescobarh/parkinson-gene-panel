@@ -30,4 +30,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["nbdime"]
+dev = ["flake8", "black[jupyter]", "isort", "nbdime", "mbake"]
+
+[tool.isort]
+profile = "black"
