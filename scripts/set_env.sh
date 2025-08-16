@@ -12,13 +12,6 @@ DATA_EXTERNAL=$(jq -r '.dir_paths.data.external' "$CONFIG_FILE")
 NCBI_ACCESSION=$(jq -r '.reference_genome.ncbi_accession' "$CONFIG_FILE")
 NCBI_NAME=$(jq -r '.reference_genome.ncbi_name' "$CONFIG_FILE")
 
-NCBI_FTP_SITE=$(jq -r '.data_sources.ncbi_genomes_ftp.site' "$CONFIG_FILE")
-REFSEQ_HUMAN_ASSEMBLIES=$(jq -r '.data_sources.ncbi_genomes_ftp.refseq_human_assemblies' "$CONFIG_FILE")
-GENOMIC_ANNOTATIONS_SUFFIX=$(jq -r '.data_sources.ncbi_genomes_ftp.genomic_annotations_suffix' "$CONFIG_FILE")
-ASSEMBLY_REPORT_SUFFIX=$(jq -r '.data_sources.ncbi_genomes_ftp.assembly_report_suffix' "$CONFIG_FILE")
-CHECKSUMS=$(jq -r '.data_sources.ncbi_genomes_ftp.checksums' "$CONFIG_FILE")
-UNCOMPRESSED_CHECKSUMS=$(jq -r '.data_sources.ncbi_genomes_ftp.uncompressed_checksums' "$CONFIG_FILE")
-
 # Load configuration
 
 export CONFIG_FILE="${ROOT_DIR%/}/config/config.json"
