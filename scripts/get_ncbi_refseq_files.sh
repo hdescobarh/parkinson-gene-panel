@@ -4,13 +4,13 @@ trap 'echo >&2 "$0: Error on line $LINENO: $BASH_COMMAND"; exit $?' ERR
 
 : "${ROOT_DIR:?'Need to set ROOT_DIR before running this script.'}"
 
-# Initialize logging
-
-exec > >(tee "${ROOT_DIR%/}/logs/${0%.*}") 2>&1
-printf "[START] (%s)\n" "$(date)"
-
 source "${ROOT_DIR%/}/scripts/utils.sh"
 source "${ROOT_DIR%/}/scripts/set_env.sh"
+
+# Initialize logging
+
+exec > >(tee "${LOGS_DIR%/}/${0%.*}") 2>&1
+printf "[START] (%s)\n" "$(date)"
 
 # Generate derived variables
 
