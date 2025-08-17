@@ -1,6 +1,31 @@
 export ROOT_DIR := $(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
 
+IMAGE_NAME = parkinson-panel
+LABEL = portfolio=parkinson-panel
+
 .PHONY: setup validate-config check-dirs get-annotations clean
+
+# TODO: add help as default target
+
+build:
+	docker build --target development -t $(IMAGE_NAME):dev \
+		--label $(LABEL) \
+		 . \
+	docker build --target production -t $(IMAGE_NAME):prod \
+		--label $(LABEL) \
+		 . \
+
+dev: validate-config check-dirs
+	docker run --rm -it \
+		--name $(IMAGE_NAME)-dev \
+		-p 8888:8888 \
+		-v $(ROOT_DIR)/makefile:/panel/src/makefile \
+		-v $(ROOT_DIR)/config/:/panel/config/ \
+		-v $(ROOT_DIR)/src:/panel/src \
+		-v $(ROOT_DIR)/scripts:/panel/scripts \
+		-v $(ROOT_DIR)/notebooks:/panel/notebooks \
+		-v $(ROOT_DIR)/reports:/panel/reports \
+		$(IMAGE_NAME):dev
 
 setup: validate-config check-dirs get-annotations
 	@echo "[MAKE]  Production setup complete."
@@ -23,3 +48,8 @@ clean: validate-config
 	@rm -rf $$(jq -r ".dir_paths.reports" "$(ROOT_DIR)/config/config.json")
 	@echo "[MAKE]  Cleaning logs..."
 	@rm -rf $$(jq -r ".dir_paths.logging" "$(ROOT_DIR)/config/config.json")
+
+clean-docker: validate-config
+	@echo "[MAKE]  Removing project images..."
+	docker rmi $$(docker images --filter "label=$(LABEL)" -q)
+
