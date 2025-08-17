@@ -2,7 +2,7 @@
 
 FROM python:3.11.7-trixie as base
 
-WORKDIR /parkinson_panel
+WORKDIR /panel
 EXPOSE 8888
 
 # #### Production image  ####
@@ -22,7 +22,7 @@ COPY scripts/ ./scripts/
 COPY notebooks/ ./notebooks/
 
 RUN chmod 755 scripts/*.sh
-RUN chown -R margaret:margaret /parkinson_panel
+RUN chown -R margaret:margaret /panel
 
 USER margaret
 
