@@ -3,7 +3,7 @@ export ROOT_DIR := $(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
 IMAGE_NAME = parkinson-panel
 LABEL = portfolio=parkinson-panel
 
-.PHONY: setup validate-config check-dirs get-annotations clean
+.PHONY: setup validate-config check-dirs clean
 
 # TODO: add help as default target
 
@@ -27,7 +27,8 @@ dev: validate-config check-dirs
 		-v $(ROOT_DIR)/reports:/panel/reports \
 		$(IMAGE_NAME):dev
 
-setup: validate-config check-dirs get-annotations
+setup: validate-config check-dirs
+	@"$(ROOT_DIR)/scripts/get_ncbi_refseq_files.sh"
 	@echo "[MAKE]  Production setup complete."
 
 validate-config:
@@ -37,9 +38,6 @@ validate-config:
 check-dirs:
 	@echo "[MAKE]  Ensuring directories exist..."
 	@bash -c "source $(ROOT_DIR)/scripts/set_env.sh"
-
-get-annotations:
-	@"$(ROOT_DIR)/scripts/get_ncbi_refseq_files.sh"
 
 clean: validate-config
 	@echo "[MAKE]  Cleaning data..."
