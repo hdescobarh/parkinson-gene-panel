@@ -1,6 +1,6 @@
 # #### Base image  ####
 
-FROM python:3.11.7-trixie as base
+FROM python:3.13.7-trixie as base
 
 WORKDIR /panel
 EXPOSE 8888
