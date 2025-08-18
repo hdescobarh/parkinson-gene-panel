@@ -30,7 +30,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["flake8", "black[jupyter]", "isort", "nbdime", "mbake"]
+dev = ["flake8", "black[jupyter]", "isort", "nbdime", "mbake", "pip-tools"]
 
 [tool.isort]
 profile = "black"
