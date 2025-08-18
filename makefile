@@ -13,22 +13,22 @@ dev-build:
 	@echo "[MAKE] Running development container..."
 	docker build --target development -t "$(IMAGE_NAME):dev" --label $(LABEL) .
 
-dev-run: check-dir
+dev-run: check-dirs
 	@echo "[MAKE] Running development container..."
 	touch requirements.txt
 # TODO: get the paths from config.json
 	docker run --rm -it \
 		--name $(IMAGE_NAME)-dev \
--p 8888: 8888 \
--v $(ROOT_DIR)/makefile: /panel/makefile \
--v $(ROOT_DIR)/config/: /panel/config/ \
--v $(ROOT_DIR)/src: /panel/src \
--v $(ROOT_DIR)/scripts: /panel/scripts \
--v $(ROOT_DIR)/notebooks: /panel/notebooks \
--v $(ROOT_DIR)/reports: /panel/reports \
--v $(ROOT_DIR)/logs: /panel/logs \
--v $(ROOT_DIR)/requirements.txt: /panel/requirements.txt \
-$(IMAGE_NAME): dev /bin/bash
+		-p "8888:8888" \
+		-v "$(ROOT_DIR)/makefile:/panel/makefile" \
+		-v "$(ROOT_DIR)/config/:/panel/config/" \
+		-v "$(ROOT_DIR)/src:/panel/src" \
+		-v "$(ROOT_DIR)/scripts:/panel/scripts" \
+		-v "$(ROOT_DIR)/notebooks:/panel/notebooks" \
+		-v "$(ROOT_DIR)/reports:/panel/reports" \
+		-v "$(ROOT_DIR)/logs:/panel/logs" \
+		-v "$(ROOT_DIR)/requirements.txt:/panel/requirements.txt" \
+		"$(IMAGE_NAME):dev" /bin/bash
 
 dev-start: setup
 	@echo "[MAKE] Starting Jupyter Lab..."
