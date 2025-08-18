@@ -32,12 +32,13 @@ dev-run: check-dir
 $(IMAGE_NAME): dev /bin/bash
 
 dev-start: setup
-	@echo "[MAKE] Running development container..."
+	@echo "[MAKE] Starting Jupyter Lab..."
 	tmux new-session -d -s jupyter \
 		'jupyter lab --no-browser --allow-root \
 		--notebook-dir=./notebooks --ip=0.0.0.0 --port=8888 \
 		--ServerApp.token= --ServerApp.password= ./notebooks/'
-	@echo "Development environment started. Jupyter at http://localhost:8888"
+	@echo "[MAKE] Development environment started. Jupyter at http://localhost:8888"
+	@echo "[MAKE] Reattach with 'tmux attach -t jupyter'"
 
 setup: check-dirs
 	"$(ROOT_DIR)/scripts/get_ncbi_refseq_files.sh"
