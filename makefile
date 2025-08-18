@@ -15,19 +15,10 @@ dev-build:
 
 dev-run: check-dirs
 	@echo "[MAKE] Running development container..."
-	touch requirements.txt
-# TODO: get the paths from config.json
 	docker run --rm -it \
 		--name $(IMAGE_NAME)-dev \
 		-p "8888:8888" \
-		-v "$(ROOT_DIR)/makefile:/panel/makefile" \
-		-v "$(ROOT_DIR)/config/:/panel/config/" \
-		-v "$(ROOT_DIR)/src:/panel/src" \
-		-v "$(ROOT_DIR)/scripts:/panel/scripts" \
-		-v "$(ROOT_DIR)/notebooks:/panel/notebooks" \
-		-v "$(ROOT_DIR)/reports:/panel/reports" \
-		-v "$(ROOT_DIR)/logs:/panel/logs" \
-		-v "$(ROOT_DIR)/requirements.txt:/panel/requirements.txt" \
+		-v "$(ROOT_DIR):/panel" -w /panel \
 		"$(IMAGE_NAME):dev" /bin/bash
 
 dev-start: setup
