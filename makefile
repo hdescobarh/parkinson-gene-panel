@@ -3,32 +3,31 @@ export ROOT_DIR := $(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
 IMAGE_NAME = parkinson-panel
 LABEL = portfolio=parkinson-panel
 
-.PHONY: setup validate-config check-dirs clean clean-docker
+.PHONY: setup validate-config check-dirs clean clean-docker build dev
 
 help:
 	@echo "TODO: add help message"
 
+# TODO: I think it is best to separate both steps, does not make sense to build both for production
 build:
 	@echo "[MAKE] Running development container..."
 	docker build --target development -t $(IMAGE_NAME):dev \
-		--label $(LABEL) \
-		 . \
-	docker build --target production -t $(IMAGE_NAME):prod \
-		--label $(LABEL) \
-		 . \
+		--label $(LABEL) .
+# docker build --target production -t $(IMAGE_NAME):prod \
+# 	--label $(LABEL) .
 
 dev: validate-config check-dirs
 	@echo "[MAKE] Running development container..."
 	docker run --rm -it \
 		--name $(IMAGE_NAME)-dev \
 		-p 8888:8888 \
-		-v $(ROOT_DIR)/makefile:/panel/src/makefile \
+		-v $(ROOT_DIR)/makefile:/panel/makefile \
 		-v $(ROOT_DIR)/config/:/panel/config/ \
 		-v $(ROOT_DIR)/src:/panel/src \
 		-v $(ROOT_DIR)/scripts:/panel/scripts \
 		-v $(ROOT_DIR)/notebooks:/panel/notebooks \
 		-v $(ROOT_DIR)/reports:/panel/reports \
-		$(IMAGE_NAME):dev
+		$(IMAGE_NAME):dev /bin/bash
 
 setup: validate-config check-dirs
 	"$(ROOT_DIR)/scripts/get_ncbi_refseq_files.sh"
