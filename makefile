@@ -27,7 +27,7 @@ dev: validate-config check-dirs
 		-v $(ROOT_DIR)/scripts:/panel/scripts \
 		-v $(ROOT_DIR)/notebooks:/panel/notebooks \
 		-v $(ROOT_DIR)/reports:/panel/reports \
-		$(IMAGE_NAME):dev /bin/bash
+		$(IMAGE_NAME):dev
 
 setup: validate-config check-dirs
 	"$(ROOT_DIR)/scripts/get_ncbi_refseq_files.sh"

@@ -45,4 +45,4 @@ pip-compile --extra dev pyproject.toml && \
 pip install -r requirements.txt
 
 ENV PYTHONPATH=/panel/src:$PYTHONPATH
-CMD ["jupyter", "lab", "--notebook-dir=./notebooks", "--ip=0.0.0.0", "--port=8888", "--ServerApp.token=", "--ServerApp.password=", "--allow-root"]
+CMD ["jupyter", "lab", "--no-browser" "--notebook-dir=./notebooks", "--ip=0.0.0.0", "--port=8888", "--ServerApp.token=", "--ServerApp.password=", "--allow-root"]
