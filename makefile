@@ -11,8 +11,7 @@ help:
 
 dev-build:
 	@echo "[MAKE] Running development container..."
-docker build --target development -t $(IMAGE_NAME): dev \
-		--label $(LABEL) .
+	docker build --target development -t "$(IMAGE_NAME):dev" --label $(LABEL) .
 
 dev-run: check-dir
 	@echo "[MAKE] Running development container..."
