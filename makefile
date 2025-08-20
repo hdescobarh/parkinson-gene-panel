@@ -1,34 +1,9 @@
 export ROOT_DIR := $(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
 
-IMAGE_NAME = parkinson-panel
-LABEL = portfolio=parkinson-panel
-
-.PHONY: help setup validate-config check-dirs clean-outputs \
-	clean-docker dev-build dev-run dev-start
+.PHONY: help setup validate-config check-dirs clean-outputs
 
 help:
 	@echo "TODO: add help message"
-
-dev-build:
-	@echo "[MAKE] Running development container..."
-	docker build --target development -t "$(IMAGE_NAME):dev" --label $(LABEL) .
-
-dev-run: check-dirs
-	@echo "[MAKE] Running development container..."
-	docker run --rm -it \
-		--name $(IMAGE_NAME)-dev \
-		-p "8888:8888" \
-		-v "$(ROOT_DIR):/panel" -w /panel \
-		"$(IMAGE_NAME):dev" /bin/bash
-
-dev-start: setup
-	@echo "[MAKE] Starting Jupyter Lab..."
-	tmux new-session -d -s jupyter \
-		'jupyter lab --no-browser --allow-root \
-		--notebook-dir=./notebooks --ip=0.0.0.0 --port=8888 \
-		--ServerApp.token= --ServerApp.password= ./notebooks/'
-	@echo "[MAKE] Development environment started. Jupyter at http://localhost:8888"
-	@echo "[MAKE] Reattach with 'tmux attach -t jupyter'"
 
 setup: check-dirs
 	"$(ROOT_DIR)/scripts/get_ncbi_refseq_files.sh"
@@ -49,7 +24,3 @@ clean-outputs: validate-config
 	@rm -rf $$(jq -r ".dir_paths.reports" "$(ROOT_DIR)/config/config.json")
 	@echo "[MAKE] Cleaning logs..."
 	@rm -rf $$(jq -r ".dir_paths.logging" "$(ROOT_DIR)/config/config.json")
-
-clean-docker: validate-config
-	@echo "[MAKE] Removing project images..."
-	docker rmi $$(docker images --filter "label=$(LABEL)" -q)
