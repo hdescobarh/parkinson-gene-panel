@@ -34,3 +34,13 @@ dev = ["flake8", "black[jupyter]", "isort", "nbdime", "mbake", "pip-tools"]
 
 [tool.isort]
 profile = "black"
+
+[tool.pyright]
+include = ["src"]
+exclude = ["**/__pycache__"]
+strict = ["src"]
+
+UnknownLambdaType = "information"
+reportUnknownMemberType = "warning"
+reportMissingTypeStubs = "information"
+pyright.disableOrganizeImports = true
