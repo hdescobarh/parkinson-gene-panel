@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 where = ["src"]
 
 [project]
-name = "parkinson-panel-bed"
+name = "parkinson-gene-panel"
 version = "0.1.0"
 authors = [{ name = "Hans Escobar", email = "hansescobar@proton.me" }]
 description = "Virtual gene panel integration for Parkinson's Disease. This workflow collects, filters, and enriches gene panels with genomic features from NCBI and pathological variants from ClinVar, producing ready-to-use BED files."
