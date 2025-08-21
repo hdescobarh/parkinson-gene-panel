@@ -5,7 +5,7 @@ trap 'echo >&2 "$0: Error on line $LINENO: $BASH_COMMAND"; exit $?' ERR
 : "${ROOT_DIR:?'Need to set ROOT_DIR before running this script.'}"
 
 source "${ROOT_DIR%/}/scripts/utils.sh"
-source "${ROOT_DIR%/}/scripts/set_env.sh"
+source "${ROOT_DIR%/}/scripts/set_workspace.sh"
 
 # Initialize logging
 

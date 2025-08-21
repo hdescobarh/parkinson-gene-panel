@@ -93,7 +93,7 @@ requirements.txt: $(ROOT_DIR)/pyproject.toml | .venv-dev/.stamp
 
 .stamps/prepare-workspace.stamp: config/config.json | .stamps/
 	@echo "[MAKE] Setting up workspace..."
-	@bash -c "source $(ROOT_DIR)/scripts/set_env.sh"
+	@bash -c "source $(ROOT_DIR)/scripts/set_workspace.sh"
 	touch $@
 
 ## Create required directories and setup workspace.
