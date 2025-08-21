@@ -83,7 +83,7 @@ requirements.txt: $(ROOT_DIR)/pyproject.toml .venv-dev/.stamp
 	.venv-dev/bin/pip-compile -o "$@" "$<"
 
 ## Create required directories and setup workspace.
-prepare-workspace: /config/config.json
+prepare-workspace: config/config.json
 	@echo "[MAKE] Creating required directories..."
 	@bash -c "source $(ROOT_DIR)/scripts/set_env.sh"
 
