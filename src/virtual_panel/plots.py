@@ -2,16 +2,17 @@ import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 import pandas as pd
 import seaborn as sns
+from matplotlib.axes import Axes
 from matplotlib_venn import venn2
 
 from .panelapp_processors import PanelAppMerged
 
 
-def plot_merged_venn_diagram(panel: PanelAppMerged, ax=None):
-    merge_origin_counts = panel.df["_merge"].value_counts().to_dict()
+def plot_merged_venn_diagram(panel: PanelAppMerged, ax: Axes | None = None):
+    merge_origin_counts: dict[str, int] = panel.df["_merge"].value_counts().to_dict()
 
     if ax is None:
-        fig, ax = plt.subplots(figsize=(4, 4))
+        _fig, ax = plt.subplots(figsize=(4, 4))
 
     venn_diagram = venn2(
         (
@@ -47,12 +48,14 @@ def count_plot(
     width: float = 8,
     height: float = 5,
     add_containers: bool = False,
-    ax=None,
+    ax: Axes | None = None,
     ticks: None | int = None,
-    palette=sns.hls_palette(3, h=0.6, l=0.5, s=0.9),  # noqa: E741
+    palette: list[tuple[float, float, float]] = sns.hls_palette(
+        3, h=0.6, l=0.5, s=0.9  # noqa: E741
+    ),
 ):
     if ax is None:
-        fig, ax = plt.subplots(figsize=(width, height))
+        _fig, ax = plt.subplots(figsize=(width, height))
 
     sns.countplot(data=data, x=x, hue="Type", ax=ax, palette=palette)
 
