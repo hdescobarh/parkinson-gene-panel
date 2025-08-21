@@ -49,7 +49,7 @@ deps:
 	done
 
 ## Initialize virtual environment and install dependencies (ENV=dev|prod).
-init: .venv-$(ENV)/.stamp
+init: deps .venv-$(ENV)/.stamp
 
 .venv-%/.stamp: pyproject.toml
 	@if [ ! -f "$(dir $@)bin/activate" ]; then \
