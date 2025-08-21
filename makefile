@@ -7,8 +7,31 @@ ifeq ($(filter $(ENV),$(VALID_ENVS)),)
 $(error [MAKE] Invalid ENV value: $(ENV). Valid values are: $(VALID_ENVS))
 endif
 
+REQUIRED_TOOLS := python jq
+OPTIONAL_TOOLS := git
+
 default: help
-.PHONY: help init install-dev install-prod setup validate-config check-dirs clean-outputs
+.PHONY: help deps init install-dev install-prod setup validate-config check-dirs clean-outputs
+
+## Check required and optional system dependencies.
+deps:
+	@echo "[MAKE] Checking required dependencies..."
+	@for tool in $(REQUIRED_TOOLS); do \
+		if command -v $$tool >/dev/null 2>&1; then \
+			echo "	✓ $$tool found."; \
+		else \
+			echo "	✗ $$tool not found (required)."; \
+			exit 1; \
+		fi; \
+	done
+	@echo "[MAKE] Checking optional dependencies..."
+	@for tool in $(OPTIONAL_TOOLS); do \
+		if command -v $$tool >/dev/null 2>&1; then \
+			echo "	✓ $$tool found."; \
+		else \
+			echo "	✗ $$tool not found (optional)."; \
+		fi; \
+	done
 
 ## Initialize virtual environment and install dependencies (ENV=dev|prod).
 init: .venv-$(ENV)/.stamp
