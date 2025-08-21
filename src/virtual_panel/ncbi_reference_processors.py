@@ -28,15 +28,15 @@ class Gff3Handler:
 
     _include_symbols: dict[str, list[int]]
 
-    _type: re.Pattern = re.compile(r"(gene|exon)")
+    _type: re.Pattern[str] = re.compile(r"(gene|exon)")
 
     # Include ONLY valid HGNC symbols. Accordingly to HGNC Guidelines,
     # symbols contain only uppercase Latin letters and Arabic numerals,
     # no punctuation, some groups may have hyphens.
-    _stable_hgnc: re.Pattern = re.compile(r"[A-Z0-9-]+")
+    _stable_hgnc: re.Pattern[str] = re.compile(r"[A-Z0-9-]+")
 
     # Relax the condition to include Corfs placeholder symbols.
-    _any_hgnc: re.Pattern = re.compile(r"gene=([orfA-Z0-9-]+)")
+    _any_hgnc: re.Pattern[str] = re.compile(r"gene=([orfA-Z0-9-]+)")
 
     def __init__(
         self,
