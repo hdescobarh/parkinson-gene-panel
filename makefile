@@ -15,7 +15,7 @@ OPTIONAL_TOOLS := git
 default: help
 .PHONY: help deps init install-dev install-prod \
 	prepare-workspace download-refseq \
-	clean clean-outputs clean-envs
+	clean clean-outputs clean-envs clean-stamps
 
 ## This help screen.
 help:
@@ -101,7 +101,7 @@ prepare-workspace: config/config.json
 download-refseq: .stamps/download-refseq.stamp
 
 ## Remove all generated files, directories, and virtual environments.
-clean: clean-outputs clean-envs
+clean: clean-outputs clean-envs clean-stamps
 
 ## Remove all outputs directories.
 clean-outputs: config/config.json
@@ -123,3 +123,6 @@ clean-envs:
 			echo "	.venv-$$env/ not found, skipping."; \
 		fi; \
 	done
+
+clean-stamps:
+	rm -rf .stamps/
