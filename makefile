@@ -20,7 +20,7 @@ help:
 		/^[a-zA-Z0-9%._-]+:/ { \
 			gsub(/:.*/, "", $$1); \
 			if (comment) { \
-				printf "  \033[32m%-8s\033[0m %s\n", $$1, comment; \
+				printf "  \033[32m%-18s\033[0m %s\n", $$1, comment; \
 			} \
 			comment = ""; \
 		} \
@@ -80,7 +80,7 @@ requirements.txt: $(ROOT_DIR)/pyproject.toml .venv-dev/.stamp
 	@echo "[MAKE] Creating requirements.txt..."
 	.venv-dev/bin/pip-compile -o "$@" "$<"
 
-## Create required directories and setup workspace
+## Create required directories and setup workspace.
 prepare-workspace: /config/config.json
 	@echo "[MAKE] Creating required directories..."
 	@bash -c "source $(ROOT_DIR)/scripts/set_env.sh"
@@ -93,10 +93,10 @@ prepare-workspace: /config/config.json
 	@echo "[MAKE] NCBI RefSeq files downloaded."
 	touch $@
 
-## Download NCBI RefSeq reference genome files
+## Download NCBI RefSeq reference genome files.
 download-refseq:.stamps/download-refseq.stamp
 
-## Create required directories and setup workspace
+## Create required directories and setup workspace.
 clean-outputs: /config/config.json
 	@echo "[MAKE] Cleaning data..."
 	@rm -rf $$(jq -r ".dir_paths.data.base_path" "$(ROOT_DIR)/config/config.json")
