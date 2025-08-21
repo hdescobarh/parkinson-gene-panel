@@ -91,13 +91,17 @@ requirements.txt: $(ROOT_DIR)/pyproject.toml | .venv-dev/.stamp
 	@echo "[MAKE] Creating requirements.txt..."
 	.venv-dev/bin/pip-compile -o "$@" "$<"
 
-.stamps/prepare-workspace.stamp: config/config.json | .stamps/
+.env.workspace: $(ROOT_DIR)/scripts/set_workspace.sh
 	@echo "[MAKE] Setting up workspace..."
-	@bash -c "source $(ROOT_DIR)/scripts/set_workspace.sh"
-	touch $@
+	@bash -c '\
+		source $(ROOT_DIR)/scripts/set_workspace.sh && \
+		awk "/^export [A-Z0-9_]+=/ { gsub(/^export /,\"\"); gsub(/=.*/,\"\"); print }" $(ROOT_DIR)/scripts/set_workspace.sh | \
+		while read var; do echo "$$var=$${!var}"; done | \
+		sort \
+	' > .env.workspace
 
 ## Create required directories and setup workspace.
-prepare-workspace: .stamps/prepare-workspace.stamp
+prepare-workspace: .env.workspace
 
 .stamps/download-refseq.stamp: | .stamps/
 	$(ROOT_DIR)/scripts/get_ncbi_refseq_files.sh
@@ -109,6 +113,8 @@ download-refseq: prepare-workspace .stamps/download-refseq.stamp
 
 ## Remove all generated files, directories, and virtual environments.
 clean: clean-outputs clean-envs clean-stamps
+	@echo "[MAKE] cleaning workspace environment variables"
+	@rm .env.workspace
 
 ## Remove all outputs directories.
 clean-outputs: config/config.json
