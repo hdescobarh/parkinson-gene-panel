@@ -80,9 +80,9 @@ class Gff3Handler:
             gene_symbol: str = gene_match.group(1)
         else:
             message = (
-                "Unexpected format in attributes. "
-                + "All gene and exon type lines must have 'gene' field in attributes. "
-                + f"Are you sure this is an NCBI Datasets Genome GFF file? Line:\n{line}\n"
+                "Unexpected format in attributes. All gene and exon type "
+                + "lines must have 'gene' field in attributes. Are you sure "
+                + f"this is an NCBI Datasets Genome GFF file? Line:\n{line}\n"
             )
             logger.warning(message)
             raise RuntimeError(message)
@@ -129,7 +129,7 @@ class Gff3Handler:
         return self._gene_annotations_df(gene_annotations)
 
     # For a given symbol, the number of lines with the feature exon is not
-    # equivallent to the number of exons. A given exon sequence can be child of multiple
+    # equivalent to the number of exons. A given exon sequence can be child of multiple
     # transcripts and appear multiple times
     def get_metrics(self) -> pd.DataFrame:
         df = pd.DataFrame.from_dict(
