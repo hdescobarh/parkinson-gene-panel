@@ -27,6 +27,7 @@ dependencies = [
   "pandas[pyarrow, output-formatting]>=2.3,<2.4",
   "matplotlib-venn>=1.1,<1.2",
   "jupyterlab>=4.4.5,<4.5",
+  "python-dotenv>=1.1.1,<1.2",
 ]
 
 [project.optional-dependencies]
