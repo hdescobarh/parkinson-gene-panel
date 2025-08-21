@@ -18,12 +18,8 @@ The final result is a curated set of ready-to-use BED files.
 ### Local Linux
 
 ```bash
-python -m venv .venv
-source .venv/bin/activate
-pip install --upgrade pip
-pip install -e .
-pip install -e .[dev]
-nbdime config-git --enable
+make init
+make download-refseq
 jupyter lab --notebook-dir="./notebooks" --ServerApp.token='' --ServerApp.password='' "./notebooks/parkinson_panel_gene_list.ipynb"
 ```
 
