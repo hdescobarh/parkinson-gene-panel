@@ -1,5 +1,7 @@
 export ROOT_DIR := $(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
 
+SHELL := /bin/bash
+
 VALID_ENVS := dev prod
 ENV ?= dev
 
@@ -12,7 +14,7 @@ OPTIONAL_TOOLS := git
 
 default: help
 .PHONY: help deps init install-dev install-prod \
-	prepare-workspace download-refseq  \
+	prepare-workspace download-refseq \
 	clean clean-outputs clean-envs
 
 ## This help screen.
@@ -66,7 +68,7 @@ install-dev:
 	.venv-dev/bin/pip install --upgrade pip
 	.venv-dev/bin/pip install -e .[dev]
 	@if command -v git >/dev/null 2>&1; then \
-		echo "[MAKE] Configuring nbdime for Git..."
+		echo "[MAKE] Configuring nbdime for Git..."; \
 		.venv-dev/bin/nbdime config-git --enable; \
 	else \
 		echo "[MAKE] Git not available, skipping nbdime configuration."; \
@@ -96,7 +98,7 @@ prepare-workspace: config/config.json
 	touch $@
 
 ## Download NCBI RefSeq reference genome files.
-download-refseq:.stamps/download-refseq.stamp
+download-refseq: .stamps/download-refseq.stamp
 
 ## Remove all generated files, directories, and virtual environments.
 clean: clean-outputs clean-envs
