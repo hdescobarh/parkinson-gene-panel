@@ -9,10 +9,13 @@ logs/
 # Store stamp files for make
 .stamps/
 
-# Environments
+# Python virtual environments
 .venv
 .venv-prod
 .venv-dev
+
+# Enviroment variables
+.env.workspace
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
