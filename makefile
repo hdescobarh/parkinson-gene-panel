@@ -10,9 +10,7 @@ endif
 default: help
 .PHONY: help init install-dev install-prod setup validate-config check-dirs clean-outputs
 
-help:
-	@echo "TODO: add help message"
-
+## Initialize virtual environment and install dependencies (ENV=dev|prod).
 init: .venv-$(ENV)/.stamp
 
 .venv-%/.stamp: pyproject.toml
@@ -65,3 +63,16 @@ clean-outputs: validate-config
 	@rm -rf $$(jq -r ".dir_paths.reports" "$(ROOT_DIR)/config/config.json")
 	@echo "[MAKE] Cleaning logs..."
 	@rm -rf $$(jq -r ".dir_paths.logging" "$(ROOT_DIR)/config/config.json")
+
+## This help screen.
+help:
+	@awk 'BEGIN { printf "Available targets:\n" } \
+		/^#/ { comment = substr($$0, 3) } \
+		/^[a-zA-Z0-9%._-]+:/ { \
+			gsub(/:.*/, "", $$1); \
+			if (comment) { \
+				printf "  \033[32m%-8s\033[0m %s\n", $$1, comment; \
+			} \
+			comment = ""; \
+		} \
+		!/^#/ && !/^[a-zA-Z0-9%._-]+:/ { comment = "" }' $(MAKEFILE_LIST)
