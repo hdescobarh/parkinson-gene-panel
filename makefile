@@ -81,9 +81,10 @@ install-dev:
 		echo "[MAKE] Git not available, skipping nbdime configuration."; \
 	fi
 
-install-prod: requirements.txt
+install-prod:
 	.venv-prod/bin/pip install --upgrade pip
 	.venv-prod/bin/pip install pip-tools
+	# Lock dependencies in Python build environment for maximizing reproducibility.
 	PIP_CONSTRAINT="$(ROOT_DIR)/requirements.txt" \
 		.venv-prod/bin/pip-sync "$(ROOT_DIR)/requirements.txt"
 
