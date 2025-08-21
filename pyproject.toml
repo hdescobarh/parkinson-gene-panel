@@ -39,8 +39,10 @@ profile = "black"
 include = ["src"]
 exclude = ["**/__pycache__"]
 strict = ["src"]
-
 UnknownLambdaType = "information"
 reportUnknownMemberType = "warning"
 reportMissingTypeStubs = "information"
-pyright.disableOrganizeImports = true
+
+[tool.pip-tools.compile]
+strip-extras = true # Next major (v8.x.x) default
+allow-unsafe = true # Next major (v8.x.x) default
