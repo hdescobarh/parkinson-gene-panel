@@ -9,7 +9,7 @@ ifeq ($(filter $(ENV),$(VALID_ENVS)),)
 $(error [MAKE] Invalid ENV value: $(ENV). Valid values are: $(VALID_ENVS))
 endif
 
-REQUIRED_TOOLS := python jq
+REQUIRED_TOOLS := python jq wget md5sum
 OPTIONAL_TOOLS := git
 
 default: help
