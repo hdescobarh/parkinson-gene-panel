@@ -11,7 +11,20 @@ REQUIRED_TOOLS := python jq
 OPTIONAL_TOOLS := git
 
 default: help
-.PHONY: help deps init install-dev install-prod setup validate-config check-dirs clean-outputs
+.PHONY: help deps init install-dev install-prod download-refseq prepare-workspace clean-outputs
+
+## This help screen.
+help:
+	@awk 'BEGIN { printf "Available targets:\n" } \
+		/^#/ { comment = substr($$0, 3) } \
+		/^[a-zA-Z0-9%._-]+:/ { \
+			gsub(/:.*/, "", $$1); \
+			if (comment) { \
+				printf "  \033[32m%-8s\033[0m %s\n", $$1, comment; \
+			} \
+			comment = ""; \
+		} \
+		!/^#/ && !/^[a-zA-Z0-9%._-]+:/ { comment = "" }' $(MAKEFILE_LIST)
 
 ## Check required and optional system dependencies.
 deps:
@@ -67,35 +80,27 @@ requirements.txt: $(ROOT_DIR)/pyproject.toml .venv-dev/.stamp
 	@echo "[MAKE] Creating requirements.txt..."
 	.venv-dev/bin/pip-compile -o "$@" "$<"
 
-setup: check-dirs
-	"$(ROOT_DIR)/scripts/get_ncbi_refseq_files.sh"
-	@echo "[MAKE] Environment setup complete."
-
-check-dirs: validate-config
-	@echo "[MAKE] Ensuring directories exist..."
+## Create required directories and setup workspace
+prepare-workspace: /config/config.json
+	@echo "[MAKE] Creating required directories..."
 	@bash -c "source $(ROOT_DIR)/scripts/set_env.sh"
 
-validate-config:
-	@echo "[MAKE] Validating configuration..."
-	@jq empty "$(ROOT_DIR)/config/config.json"
+.stamps/:
+	mkdir -p $@
 
-clean-outputs: validate-config
+.stamps/download-refseq.stamp: prepare-workspace | .stamps/
+	"$(ROOT_DIR)/scripts/get_ncbi_refseq_files.sh"
+	@echo "[MAKE] NCBI RefSeq files downloaded."
+	touch $@
+
+## Download NCBI RefSeq reference genome files
+download-refseq:.stamps/download-refseq.stamp
+
+## Create required directories and setup workspace
+clean-outputs: /config/config.json
 	@echo "[MAKE] Cleaning data..."
 	@rm -rf $$(jq -r ".dir_paths.data.base_path" "$(ROOT_DIR)/config/config.json")
 	@echo "[MAKE] Cleaning reports..."
 	@rm -rf $$(jq -r ".dir_paths.reports" "$(ROOT_DIR)/config/config.json")
 	@echo "[MAKE] Cleaning logs..."
 	@rm -rf $$(jq -r ".dir_paths.logging" "$(ROOT_DIR)/config/config.json")
-
-## This help screen.
-help:
-	@awk 'BEGIN { printf "Available targets:\n" } \
-		/^#/ { comment = substr($$0, 3) } \
-		/^[a-zA-Z0-9%._-]+:/ { \
-			gsub(/:.*/, "", $$1); \
-			if (comment) { \
-				printf "  \033[32m%-8s\033[0m %s\n", $$1, comment; \
-			} \
-			comment = ""; \
-		} \
-		!/^#/ && !/^[a-zA-Z0-9%._-]+:/ { comment = "" }' $(MAKEFILE_LIST)
