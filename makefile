@@ -80,7 +80,7 @@ install-prod: requirements.txt
 	PIP_CONSTRAINT="$(ROOT_DIR)/requirements.txt" \
 		.venv-prod/bin/pip-sync "$(ROOT_DIR)/requirements.txt"
 
-requirements.txt: $(ROOT_DIR)/pyproject.toml .venv-dev/.stamp
+requirements.txt: $(ROOT_DIR)/pyproject.toml | .venv-dev/.stamp
 	@echo "[MAKE] Creating requirements.txt..."
 	.venv-dev/bin/pip-compile -o "$@" "$<"
 
