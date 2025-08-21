@@ -55,14 +55,14 @@ init: deps .venv-$(ENV)/.stamp
 
 .venv-%/.stamp: pyproject.toml
 	@if [ ! -f "$(dir $@)bin/activate" ]; then \
-		echo "[MAKE] Creating $* Python virtual environment..."; \
+		echo "[MAKE] Creating .venv-$* Python virtual environment..."; \
 		python -m venv $(dir $@); \
 	else \
-		echo "[MAKE] $* Python virtual environment already exists, skipping creation."; \
+		echo "[MAKE] $* Python virtual environment .venv-$* already exists, skipping creation."; \
 	fi
 	$(MAKE) install-$*
 	touch $@
-	@echo "[MAKE] Virtual environment $* properly configured."
+	@echo "[MAKE] Python virtual environment .venv-$* properly configured."
 
 install-dev:
 	.venv-dev/bin/pip install --upgrade pip
