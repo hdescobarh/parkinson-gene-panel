@@ -104,3 +104,15 @@ clean-outputs: /config/config.json
 	@rm -rf $$(jq -r ".dir_paths.reports" "$(ROOT_DIR)/config/config.json")
 	@echo "[MAKE] Cleaning logs..."
 	@rm -rf $$(jq -r ".dir_paths.logging" "$(ROOT_DIR)/config/config.json")
+
+## Remove all virtual environments.
+clean-envs:
+	@echo "[MAKE] Removing virtual environments..."
+	@for env in $(VALID_ENVS); do \
+		if [ -d ".venv-$$env" ]; then \
+			echo "[MAKE] Removing .venv-$$env/"; \
+			rm -rf ".venv-$$env"; \
+		else \
+			echo "[MAKE] .venv-$$env/ not found, skipping."; \
+		fi; \
+	done
