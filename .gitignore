@@ -6,6 +6,9 @@ logs/
 # Prototypes directory
 **/prototyping
 
+# Store stamp files for make
+.stamps/
+
 # Environments
 .venv
 .venv-prod
