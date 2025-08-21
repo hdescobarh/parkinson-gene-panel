@@ -92,13 +92,13 @@ prepare-workspace: config/config.json
 .stamps/:
 	mkdir -p $@
 
-.stamps/download-refseq.stamp: prepare-workspace | .stamps/
-	"$(ROOT_DIR)/scripts/get_ncbi_refseq_files.sh"
+.stamps/download-refseq.stamp: | .stamps/
+	$(ROOT_DIR)/scripts/get_ncbi_refseq_files.sh
 	@echo "[MAKE] NCBI RefSeq files downloaded."
 	touch $@
 
 ## Download NCBI RefSeq reference genome files.
-download-refseq: .stamps/download-refseq.stamp
+download-refseq: prepare-workspace .stamps/download-refseq.stamp
 
 ## Remove all generated files, directories, and virtual environments.
 clean: clean-outputs clean-envs clean-stamps
