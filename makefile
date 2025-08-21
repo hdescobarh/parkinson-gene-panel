@@ -30,6 +30,9 @@ help:
 		} \
 		!/^#/ && !/^[a-zA-Z0-9%._-]+:/ { comment = "" }' $(MAKEFILE_LIST)
 
+.stamps/:
+	mkdir -p $@
+
 ## Check required and optional system dependencies.
 deps:
 	@echo "[MAKE] Checking required dependencies..."
@@ -50,8 +53,12 @@ deps:
 		fi; \
 	done
 
+.stamps/deps.stamp: | .stamps/
+	$(MAKE) deps
+	touch $@
+
 ## Initialize virtual environment and install dependencies (ENV=dev|prod).
-init: deps .venv-$(ENV)/.stamp
+init: .stamps/deps.stamp .venv-$(ENV)/.stamp
 
 .venv-%/.stamp: pyproject.toml
 	@if [ ! -f "$(dir $@)bin/activate" ]; then \
@@ -84,13 +91,13 @@ requirements.txt: $(ROOT_DIR)/pyproject.toml | .venv-dev/.stamp
 	@echo "[MAKE] Creating requirements.txt..."
 	.venv-dev/bin/pip-compile -o "$@" "$<"
 
-## Create required directories and setup workspace.
-prepare-workspace: config/config.json
-	@echo "[MAKE] Creating required directories..."
+.stamps/prepare-workspace.stamp: config/config.json | .stamps/
+	@echo "[MAKE] Setting up workspace..."
 	@bash -c "source $(ROOT_DIR)/scripts/set_env.sh"
+	touch $@
 
-.stamps/:
-	mkdir -p $@
+## Create required directories and setup workspace.
+prepare-workspace: .stamps/prepare-workspace.stamp
 
 .stamps/download-refseq.stamp: | .stamps/
 	$(ROOT_DIR)/scripts/get_ncbi_refseq_files.sh
