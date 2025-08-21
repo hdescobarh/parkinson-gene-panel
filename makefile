@@ -11,7 +11,9 @@ REQUIRED_TOOLS := python jq
 OPTIONAL_TOOLS := git
 
 default: help
-.PHONY: help deps init install-dev install-prod download-refseq prepare-workspace clean-outputs
+.PHONY: help deps init install-dev install-prod \
+	prepare-workspace download-refseq  \
+	clean clean-outputs clean-envs
 
 ## This help screen.
 help:
@@ -96,23 +98,26 @@ prepare-workspace: /config/config.json
 ## Download NCBI RefSeq reference genome files.
 download-refseq:.stamps/download-refseq.stamp
 
-## Create required directories and setup workspace.
-clean-outputs: /config/config.json
-	@echo "[MAKE] Cleaning data..."
+## Remove all generated files, directories, and virtual environments.
+clean: clean-outputs clean-envs
+
+## Remove all outputs directories.
+clean-outputs: config/config.json
+	@echo "[MAKE] Cleaning data/ ..."
 	@rm -rf $$(jq -r ".dir_paths.data.base_path" "$(ROOT_DIR)/config/config.json")
-	@echo "[MAKE] Cleaning reports..."
+	@echo "[MAKE] Cleaning reports/ ..."
 	@rm -rf $$(jq -r ".dir_paths.reports" "$(ROOT_DIR)/config/config.json")
-	@echo "[MAKE] Cleaning logs..."
+	@echo "[MAKE] Cleaning logs/ ..."
 	@rm -rf $$(jq -r ".dir_paths.logging" "$(ROOT_DIR)/config/config.json")
 
-## Remove all virtual environments.
+## Remove all Python virtual environments.
 clean-envs:
 	@echo "[MAKE] Removing virtual environments..."
 	@for env in $(VALID_ENVS); do \
 		if [ -d ".venv-$$env" ]; then \
-			echo "[MAKE] Removing .venv-$$env/"; \
+			echo "	Removing .venv-$$env/"; \
 			rm -rf ".venv-$$env"; \
 		else \
-			echo "[MAKE] .venv-$$env/ not found, skipping."; \
+			echo "	.venv-$$env/ not found, skipping."; \
 		fi; \
 	done
