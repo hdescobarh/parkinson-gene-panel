@@ -6,6 +6,7 @@ from dataclasses import dataclass, field, fields
 from enum import Enum
 from typing import Any, Optional
 
+import numpy as np
 import pandas as pd
 from pandas.api.types import CategoricalDtype
 
@@ -17,17 +18,17 @@ PanelAppGelStatus = Enum(
 )
 
 PANEL_BASE_DTYPES = {
-    "Name": "string",
+    "Name": pd.StringDtype,
     "Type": CategoricalDtype(categories=[v.name for v in PanelAppEntityType]),
     "Status": CategoricalDtype(categories=[v.name for v in PanelAppGelStatus]),
     "GRCh38_chr": CategoricalDtype(
         categories=[str(i) for i in range(1, 23)] + ["X", "Y", "MT"], ordered=True
     ),
-    "GRCh38_start": "Int64",
-    "GRCh38_end": "Int64",
-    "HGNC_ID": "string",
-    "HGNC_symbol": "string",
-    "Biotype": "string",
+    "GRCh38_start": pd.Int64Dtype,
+    "GRCh38_end": pd.Int64Dtype,
+    "HGNC_ID": pd.StringDtype,
+    "HGNC_symbol": pd.StringDtype,
+    "Biotype": pd.StringDtype,
 }
 
 
@@ -372,7 +373,7 @@ class PanelAppMerged:
                     f"{col_name}{self.suffix_left}",
                     f"{col_name}{self.suffix_right}",
                 ],
-            ).astype(PANEL_BASE_DTYPES.get(col_name, "object"))
+            ).astype(PANEL_BASE_DTYPES.get(col_name, np.dtype("O")))
 
         logger.info("Adding new columns...")
 
