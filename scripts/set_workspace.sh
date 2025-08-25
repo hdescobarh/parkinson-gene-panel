@@ -15,7 +15,9 @@ export CONFIG_FILE="${ROOT_DIR%/}/config/config.json"
 
 NCBI_ACCESSION=$(get_config  '.reference_genome.ncbi_accession')
 NCBI_NAME=$(get_config  '.reference_genome.ncbi_name')
+NCBI_ANNOTATIONS_SUFFIX=$(get_config  '.data_sources.ncbi_genomes_ftp.genomic_annotations_suffix')
 export ASSEMBLY_TAG="${NCBI_ACCESSION}_${NCBI_NAME}"
+export ASSEMBLY_ANNOTATIONS_FILE="${ASSEMBLY_TAG}${NCBI_ANNOTATIONS_SUFFIX%.*}"
 
 LOGGING=$(get_config  '.dir_paths.logging')
 export LOGS_DIR="${ROOT_DIR%/}/${LOGGING}"
