@@ -1,6 +1,7 @@
-import httpx
 from dataclasses import dataclass
 from enum import Enum
+
+import httpx
 
 PANELAPP_ENGLAND_API_BASE = "https://panelapp.genomicsengland.co.uk/api/v1/"
 PANELAPP_AUSTRALIA_API_BASE = "https://panelapp-aus.org/api/v1/"
