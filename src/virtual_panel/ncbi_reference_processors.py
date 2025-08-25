@@ -124,8 +124,6 @@ class Gff3Handler:
                     case _:
                         raise AssertionError(f"Unexpected sequence type ({fields[0]}).")
 
-                out_file.writelines("\t".join((*(fields), "\n")))
-
         return self._gene_annotations_df(gene_annotations)
 
     # For a given symbol, the number of lines with the feature exon is not
