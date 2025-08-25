@@ -17,18 +17,19 @@ PanelAppGelStatus = Enum(
     "PanelAppGelStatus", [("GREEN", "3"), ("AMBER", "2"), ("RED", "1"), ("GRAY", "0")]
 )
 
-PANEL_BASE_DTYPES = {
-    "Name": pd.StringDtype,
+
+PANEL_BASE_DTYPES: dict[str, np.dtype | pd.api.extensions.ExtensionDtype] = {
+    "Name": pd.StringDtype(),
     "Type": CategoricalDtype(categories=[v.name for v in PanelAppEntityType]),
     "Status": CategoricalDtype(categories=[v.name for v in PanelAppGelStatus]),
     "GRCh38_chr": CategoricalDtype(
         categories=[str(i) for i in range(1, 23)] + ["X", "Y", "MT"], ordered=True
     ),
-    "GRCh38_start": pd.Int64Dtype,
-    "GRCh38_end": pd.Int64Dtype,
-    "HGNC_ID": pd.StringDtype,
-    "HGNC_symbol": pd.StringDtype,
-    "Biotype": pd.StringDtype,
+    "GRCh38_start": pd.Int64Dtype(),
+    "GRCh38_end": pd.Int64Dtype(),
+    "HGNC_ID": pd.StringDtype(),
+    "HGNC_symbol": pd.StringDtype(),
+    "Biotype": pd.StringDtype(),
 }
 
 
@@ -334,9 +335,7 @@ class PanelAppMerged:
 
         logger.info("Starting default Status conflict solving strategy...")
         self.df[consensus_col_name] = self.df.apply(
-            lambda row, col_name_left, col_name_right: (
-                "GREEN" if row[col_name_left] == row[col_name_right] else "MIXED"
-            ),
+            self.__consensus_operation,
             args=[
                 f"Status{self.suffix_left}",
                 f"Status{self.suffix_right}",
@@ -346,6 +345,12 @@ class PanelAppMerged:
 
         self.df[consensus_col_name] = self.df[consensus_col_name].astype("category")
         logger.info("Default Status conflict solving strategy: End.")
+
+    def __consensus_operation(
+        self, row: pd.Series, col_name_left: str, col_name_right: str
+    ):
+        output = "GREEN" if row[col_name_left] == row[col_name_right] else "MIXED"
+        return output
 
     def make_consensus(
         self,
