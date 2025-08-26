@@ -15,7 +15,8 @@ OPTIONAL_TOOLS := git
 default: help
 .PHONY: help deps init install-dev install-prod \
 	prepare-workspace download-refseq \
-	clean clean-outputs clean-envs clean-stamps
+	clean clean-outputs clean-envs clean-stamps \
+	jupyter jupyter-root
 
 ## This help screen.
 help:
@@ -108,6 +109,16 @@ prepare-workspace: .env.workspace
 
 ## Download NCBI RefSeq reference genome files.
 download-refseq: prepare-workspace .stamps/download-refseq.stamp
+
+## Start local Jupyter Lab server
+jupyter: .venv-$(ENV)/.stamp .env.workspace .stamps/download-refseq.stamp
+	@.venv-$(ENV)/bin/jupyter lab --notebook-dir="notebooks/" --port=8888 \
+		--ServerApp.token=''
+
+jupyter-root: .venv-$(ENV)/.stamp .env.workspace .stamps/download-refseq.stamp
+	@# Hidden for security reasons. Use only in isolated containers!!!.
+	@.venv-$(ENV)/bin/jupyter lab --allow-root --notebook-dir="notebooks/" \
+		--port=8888 --ip=0.0.0.0 --ServerApp.token='' --no-browser
 
 ## Creates requirements.txt with locked dependency versions.
 requirements.txt: $(ROOT_DIR)/pyproject.toml | .venv-dev/.stamp
