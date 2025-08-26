@@ -88,10 +88,6 @@ install-prod:
 	PIP_CONSTRAINT="$(ROOT_DIR)/requirements.txt" \
 		.venv-prod/bin/pip-sync "$(ROOT_DIR)/requirements.txt"
 
-requirements.txt: $(ROOT_DIR)/pyproject.toml | .venv-dev/.stamp
-	@echo "[MAKE] Creating requirements.txt..."
-	.venv-dev/bin/pip-compile -o "$@" "$<"
-
 .env.workspace: $(ROOT_DIR)/scripts/set_workspace.sh
 	@echo "[MAKE] Setting up workspace..."
 	@bash -c '\
@@ -111,6 +107,11 @@ prepare-workspace: .env.workspace
 
 ## Download NCBI RefSeq reference genome files.
 download-refseq: prepare-workspace .stamps/download-refseq.stamp
+
+## Creates requirements.txt with locked dependency versions.
+requirements.txt: $(ROOT_DIR)/pyproject.toml | .venv-dev/.stamp
+	@echo "[MAKE] Creating requirements.txt..."
+	.venv-dev/bin/pip-compile -o "$@" "$<"
 
 ## Remove all generated files, directories, and virtual environments.
 clean: clean-outputs clean-envs clean-stamps
