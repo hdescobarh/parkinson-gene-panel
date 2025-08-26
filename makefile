@@ -119,6 +119,8 @@ clean: clean-outputs clean-envs clean-stamps
 clean-outputs: config/config.json
 	@echo "[MAKE] Cleaning data/ ..."
 	@rm -rf $$(jq -r ".dir_paths.data.base_path" "$(ROOT_DIR)/config/config.json")
+# data includes downloaded files
+	@rm -rf .stamps/download-refseq.stamp
 	@echo "[MAKE] Cleaning reports/ ..."
 	@rm -rf $$(jq -r ".dir_paths.reports" "$(ROOT_DIR)/config/config.json")
 	@echo "[MAKE] Cleaning logs/ ..."
