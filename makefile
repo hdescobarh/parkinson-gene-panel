@@ -3,7 +3,7 @@ export ROOT_DIR := $(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
 SHELL := /bin/bash
 
 VALID_ENVS := dev prod
-ENV ?= dev
+ENV ?= prod
 
 ifeq ($(filter $(ENV),$(VALID_ENVS)),)
 $(error [MAKE] Invalid ENV value: $(ENV). Valid values are: $(VALID_ENVS))
@@ -87,6 +87,7 @@ install-prod:
 	# Lock dependencies in Python build environment for maximizing reproducibility.
 	PIP_CONSTRAINT="$(ROOT_DIR)/requirements.txt" \
 		.venv-prod/bin/pip-sync "$(ROOT_DIR)/requirements.txt"
+	.venv-prod/bin/pip install --no-deps .
 
 .env.workspace: $(ROOT_DIR)/scripts/set_workspace.sh
 	@echo "[MAKE] Setting up workspace..."
