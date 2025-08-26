@@ -47,6 +47,25 @@ This project provides a reproducible workflow to generate a virtual gene panel f
 
 ## Results (v.0.1.0)
 
+![Fig1](assets/origin_and_consensus_counts_by_type.png)
+_**Fig 1.** Absolute frequency of entities by Type and (A) Healthcare system origin and (B) Merge Status._
+
+![Fig2](assets/chromosome_counts_by_type.png)
+_**Fig 2.** Absolute frequency of entities by Type and Chromosome._
+
+A virtual gene panel for Parkinson's Disease was successfully generated, encompassing genes associated with Complex Parkinsonism, pallido-pyramidal syndromes, Early-onset and familial Parkinson's Disease, and the Abnormality of extrapyramidal motor function phenotype.
+
+The final panel is composed of 113 entities, which include 90 genes and 23 Short Tandem Repeats (STRs), with no Copy Number Variations (CNVs) included (Fig. 1). All entities, with the exception of one, are protein-coding genes. While the STRs are assigned a MIXED status in the merged panel due to their different origins, each held a GREEN status within its respective source panel.
+
+Finally, while the entities are distributed across nearly the entire nuclear genome, their distribution is notably uneven (Fig. 2).
+
+### Curation summary
+
+- **Entity Biotype Fix**: One entity was corrected to have a biotype that complies with the Sequence Ontology standard.
+- **HGNC Symbol Updates**: The HGNC symbols for two genes, one stable and one placeholder, were updated.
+- **Gene Location Updates**: The locations of 87 (97%) genes were updated to align with RefSeq annotations.
+- **Strand Information Enrichment**: Strand information was added for 90 genes.
+
 ## Usage
 
 ### Dependencies
