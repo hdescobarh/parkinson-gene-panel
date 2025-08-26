@@ -114,8 +114,6 @@ download-refseq: prepare-workspace .stamps/download-refseq.stamp
 
 ## Remove all generated files, directories, and virtual environments.
 clean: clean-outputs clean-envs clean-stamps
-	@echo "[MAKE] cleaning workspace environment variables"
-	@rm .env.workspace
 
 ## Remove all outputs directories.
 clean-outputs: config/config.json
@@ -125,6 +123,8 @@ clean-outputs: config/config.json
 	@rm -rf $$(jq -r ".dir_paths.reports" "$(ROOT_DIR)/config/config.json")
 	@echo "[MAKE] Cleaning logs/ ..."
 	@rm -rf $$(jq -r ".dir_paths.logging" "$(ROOT_DIR)/config/config.json")
+	@echo "[MAKE] cleaning workspace environment variables"
+	@rm .env.workspace
 
 ## Remove all Python virtual environments.
 clean-envs:
