@@ -7,13 +7,17 @@
 ![Docker](https://img.shields.io/badge/Container-Docker-4584B6?logo=docker&logoColor=white)
 ![Jupyter](https://img.shields.io/badge/Notebook-Jupyter-4584B6?logo=jupyter&logoColor=white)
 
-## Description
+## The problem
 
-A (hypothetical) clinical laboratory is struggling to maintain their overgrown set of static Targeted Gene Sequencing (TGS) panels and is moving to Whole Exome Sequencing (WES) based virtual gene panels. As part of this pilot, it is introducing a virtual panel for testing Parkinsonism (MONDO:0021095), with a focus in Parkinson's Disease (MONDO:0005180), including the rarer Early-Onset presentations (MONDO:0017279).
+A clinical laboratory is struggling to keep up with its rapidly expanding collection of static Targeted Gene Sequencing (TGS) panels. These panels, designed to test for specific conditions, are becoming overwhelming and difficult to maintain. The lab wants to modernize its approach by transitioning to **Whole Exome Sequencing** (WES) based **virtual gene panels**. This new method allows them to create tailored gene list, use algorithms not available for TGS and modify the tested regions without the need of resequencing.
 
-The laboratory requires, following the American College of Medical Genetics and Genomics (ACMG) guidelines, develop and validate the clinical test, this includes wet laboratory, bioinformatics pipeline and reporting.
+As part of this transition, the lab has chosen to start its pilot introducing a virtual panel for testing Parkinsonism (MONDO:0021095), with a focus in Parkinson's Disease (MONDO:0005180), including the rarer Early-Onset presentations (MONDO:0017279).
 
-An initial step is to define a reproducible workflow for generating the initial set of testing regions, which is necessary for the optimization and validation steps of the bioinformatics pipeline. I propose a semiautomatic workflow to merge, curate and generate bioinformatics pipeline ready-to-use files for Parkinson's Disease virtual gene panels. It generates ready-to-use files to be used in the virtual panel’s bioinformatics pipeline.
+## Tailoring a solution
+
+The laboratory requires, following the American College of Medical Genetics and Genomics (ACMG) guidelines, develop and validate this new clinical test, this includes wet laboratory, bioinformatics pipeline and reporting.
+
+An **initial step** is to define a reproducible workflow for generating the initial set of testing regions, which is necessary for the optimization and validation steps of the bioinformatics pipeline. I propose a semiautomatic workflow to merge, curate and generate bioinformatics pipeline ready-to-use files for Parkinson's Disease virtual gene panels. It generates ready-to-use files to be used in the virtual panel’s bioinformatics pipeline.
 
 ## Methodology
 
