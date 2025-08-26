@@ -9,15 +9,15 @@
 
 ## The problem
 
-A clinical laboratory is struggling to keep up with its rapidly expanding collection of static Targeted Gene Sequencing (TGS) panels. These panels, designed to test for specific conditions, are becoming overwhelming and difficult to maintain. To modernize its approach, the lab is transitioning to Whole Exome Sequencing (WES) based virtual gene panels. This new method allows them to create tailored gene lists, use algorithms not available for TGS, and modify the tested regions without the need for resequencing.
+A clinical laboratory is struggling to keep up with its rapidly expanding collection of static Targeted Gene Sequencing (TGS) panels. These panels, designed to test for specific conditions, are becoming overwhelming and difficult to maintain. To modernize its approach, the lab is transitioning to **Whole Exome Sequencing** (WES) based **virtual gene panels**. This new method allows them to create tailored gene lists, use algorithms not available for TGS, and modify the tested regions without the need for resequencing.
 
-As part of this transition, the lab has chosen to start its pilot program by introducing a virtual panel for testing Parkinsonism (MONDO:0021095), with a focus on Parkinson's Disease (MONDO:0005180), including its rarer Early-Onset presentations (MONDO:0017279).
+As part of this transition, the lab has chosen to start its pilot program by introducing a virtual panel for testing Parkinsonism (MONDO:0021095), with a focus on **Parkinson's Disease** (MONDO:0005180), including its rarer **Early-Onset presentations** (MONDO:0017279).
 
 ## Tailoring a solution
 
 Following the guidelines of the American College of Medical Genetics and Genomics (ACMG), the laboratory requires the development and validation of this clinical test, covering everything from wet-lab procedures to reporting guidelines (Rehder et al., 2021). **The scope of this porfolio project is a early process in bioinformatics pipeline validation.**
 
-I propose a semi-automatic workflow to merge, curate, and generate bioinformatics pipeline-ready files for a Parkinson's Disease virtual gene panel. The generated files are essential for the optimization and validation steps of the panel slice (Bean et al., 2020; SoRelle et al., 2024). After selecting the reference genome and annotation version (GRCh38.p14, GCF_000001405.40), specific BED files are needed to define Quality Assurance (QA) / Quality Control (QC) metric thresholds and to limit variant detection to the predefined set of regions.
+I propose a semi-automatic workflow to merge, curate, and generate bioinformatics pipeline-ready files for a Parkinson's Disease virtual gene panel. **The generated files are essential for the optimization and validation steps of the panel slice** (Bean et al., 2020; SoRelle et al., 2024). After selecting the reference genome and annotation version (GRCh38.p14, GCF_000001405.40), specific BED files are needed to define Quality Assurance (QA) / Quality Control (QC) metric thresholds and to limit variant detection to the predefined set of regions.
 
 This project does not aim to harmonize panels (Stark et al., 2021). Additionally, the gene set is not definitive; as part of the test validation process, it is subject to later refinements based on the criteria of medical professionals.
 
@@ -67,6 +67,16 @@ Finally, while the entities are distributed across nearly the entire nuclear gen
 - **HGNC Symbol Updates**: The HGNC symbols for two genes, one stable and one placeholder, were updated.
 - **Gene Location Updates**: The locations of 87 (97%) genes were updated to align with RefSeq annotations.
 - **Strand Information Enrichment**: Strand information was added for 90 genes.
+
+## Releases
+
+The releases includes:
+
+- **BED file** containing genomic intervals of exons, Short Tandem Repeats (STRs), and Copy Number Variants (CNVs), if present.
+
+- **TSV file** (tab-separated values) listing the panel entities, including their type, suitability status, genomic location, strand, and origin.
+
+[Download the latest release](https://github.com/hdescobarh/parkinson-gene-panel/releases/latest)
 
 ## For developers
 
