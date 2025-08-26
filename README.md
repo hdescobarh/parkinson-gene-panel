@@ -9,23 +9,43 @@
 
 ## The problem
 
-A clinical laboratory is struggling to keep up with its rapidly expanding collection of static Targeted Gene Sequencing (TGS) panels. These panels, designed to test for specific conditions, are becoming overwhelming and difficult to maintain. The lab wants to modernize its approach by transitioning to **Whole Exome Sequencing** (WES) based **virtual gene panels**. This new method allows them to create tailored gene list, use algorithms not available for TGS and modify the tested regions without the need of resequencing.
+A clinical laboratory is struggling to keep up with its rapidly expanding collection of static Targeted Gene Sequencing (TGS) panels. These panels, designed to test for specific conditions, are becoming overwhelming and difficult to maintain. To modernize its approach, the lab is transitioning to Whole Exome Sequencing (WES) based virtual gene panels. This new method allows them to create tailored gene lists, use algorithms not available for TGS, and modify the tested regions without the need for resequencing.
 
-As part of this transition, the lab has chosen to start its pilot introducing a virtual panel for testing Parkinsonism (MONDO:0021095), with a focus in Parkinson's Disease (MONDO:0005180), including the rarer Early-Onset presentations (MONDO:0017279).
+As part of this transition, the lab has chosen to start its pilot program by introducing a virtual panel for testing Parkinsonism (MONDO:0021095), with a focus on Parkinson's Disease (MONDO:0005180), including its rarer Early-Onset presentations (MONDO:0017279).
 
 ## Tailoring a solution
 
-The laboratory requires, following the American College of Medical Genetics and Genomics (ACMG) guidelines, develop and validate this new clinical test, this includes wet laboratory, bioinformatics pipeline and reporting.
+Following the guidelines of the American College of Medical Genetics and Genomics (ACMG), the laboratory requires the development and validation of this clinical test, covering everything from wet-lab procedures to reporting guidelines (Rehder et al., 2021). **The scope of this porfolio project is a early process in bioinformatics pipeline validation.**
 
-An **initial step** is to define a reproducible workflow for generating the initial set of testing regions, which is necessary for the optimization and validation steps of the bioinformatics pipeline. I propose a semiautomatic workflow to merge, curate and generate bioinformatics pipeline ready-to-use files for Parkinson's Disease virtual gene panels. It generates ready-to-use files to be used in the virtual panel’s bioinformatics pipeline.
+I propose a semi-automatic workflow to merge, curate, and generate bioinformatics pipeline-ready files for a Parkinson's Disease virtual gene panel. The generated files are essential for the optimization and validation steps of the panel slice (Bean et al., 2020; SoRelle et al., 2024). After selecting the reference genome and annotation version (GRCh38.p14, GCF_000001405.40), specific BED files are needed to define Quality Assurance (QA) / Quality Control (QC) metric thresholds and to limit variant detection to the predefined set of regions.
 
-## Methodology
+This project does not aim to harmonize panels (Stark et al., 2021). Additionally, the gene set is not definitive; as part of the test validation process, it is subject to later refinements based on the criteria of medical professionals.
 
-## Results (v.0.1.x)
+## Methodology overview
 
-```
-# TODO: I think it will be necessary to create a static assets directory. Results can change between releases..
-```
+This project provides a reproducible workflow to generate a virtual gene panel for Parkinson's Disease. The process is broken down into three key phases, with detailed implementation provided in the project's Jupyter Notebooks.
+
+1. PanelApp data retrieval and curation
+
+- I sourced panels from PanelApp, an open-access knowledge database with expert-curated gene lists (Martin et al., 2019). I selected all available Parkinsonism panels from both the England and Australia PanelApp databases, locking the specific versions for reproducibility.
+
+- The retrieved panels were filtered for clinical suitability based on expert assessments. They were then merged into a single consensus panel, and potential conflicts were evaluated. The entities were stratified based on their suitability status across the individual panels.
+
+- All gene entities were reviewed to identify and manually curates any annotation issues.
+
+2. Enrichment with NCBI RefSeq Annotations
+
+- PanelApp is annotated with Ensembl/GENCODE, while key resources like ClinVar use NCBI Genome annotations. To avoid inconsistencies from mixed annotation systems, I replaced the original location data with annotations from NCBI RefSeq.
+
+- The gene data was also enriched with strand information, and outdated data entries were curated during this process.
+
+3. Generation of BED Files
+
+- The curated data from the previous steps was used to generate well-formatted BED files containing only the genomic intervals for exons, STRs, and CNVs. These intervals are essential for downstream analysis.
+
+- I used BEDOPS v2.4.41 (Neph et al., 2012) to validate the BED file format, merge any overlapping intervals, and ensure the coordinate systems were correct.
+
+## Results (v.0.1.0)
 
 ## Usage
 
@@ -77,9 +97,14 @@ This repository uses a dual-license structure:
 
 ## References
 
-```
-TODO: Generate with Zotero. Use APA.
+- Bean, L., Funke, B., Carlston, C. M., Gannon, J. L., Kantarci, S., Krock, B. L., Zhang, S., & Bayrak-Toydemir, P. (2020). Diagnostic gene sequencing panels: From design to report—a technical standard of the American College of Medical Genetics and Genomics (ACMG). Genetics in Medicine, 22(3), 453–461. https://doi.org/10.1038/s41436-019-0666-z
 
-TODO: Don't forget to include software citations: pandas, matplotlib,
+- Martin, A. R., Williams, E., Foulger, R. E., Leigh, S., Daugherty, L. C., Niblock, O., Leong, I. U. S., Smith, K. R., Gerasimenko, O., Haraldsdottir, E., Thomas, E., Scott, R. H., Baple, E., Tucci, A., Brittain, H., De Burca, A., Ibañez, K., Kasperaviciute, D., Smedley, D., … McDonagh, E. M. (2019). PanelApp crowdsources expert knowledge to establish consensus diagnostic gene panels. Nature Genetics, 51(11), 1560–1565. https://doi.org/10.1038/s41588-019-0528-2
 
-```
+- Neph, S., Kuehn, M. S., Reynolds, A. P., Haugen, E., Thurman, R. E., Johnson, A. K., Rynes, E., Maurano, M. T., Vierstra, J., Thomas, S., Sandstrom, R., Humbert, R., & Stamatoyannopoulos, J. A. (2012). BEDOPS: High-performance genomic feature operations. Bioinformatics, 28(14), 1919–1920. https://doi.org/10.1093/bioinformatics/bts277
+
+- Rehder, C., Bean, L. J. H., Bick, D., Chao, E., Chung, W., Das, S., O’Daniel, J., Rehm, H., Shashi, V., & Vincent, L. M. (2021). Next-generation sequencing for constitutional variants in the clinical laboratory, 2021 revision: A technical standard of the American College of Medical Genetics and Genomics (ACMG). Genetics in Medicine, 23(8), 1399–1415. https://doi.org/10.1038/s41436-021-01139-4
+
+- SoRelle, J. A., Funke, B. H., Eno, C. C., Ji, J., Santani, A., Bayrak-Toydemir, P., Wachsmann, M., Wain, K. E., & Mao, R. (2024). Slice Testing—Considerations from Ordering to Reporting. The Journal of Molecular Diagnostics, 26(3), 159–167. https://doi.org/10.1016/j.jmoldx.2023.11.008
+
+- Stark, Z., Foulger, R. E., Williams, E., Thompson, B. A., Patel, C., Lunke, S., Snow, C., Leong, I. U. S., Puzriakova, A., Daugherty, L. C., Leigh, S., Boustred, C., Niblock, O., Rueda-Martin, A., Gerasimenko, O., Savage, K., Bellamy, W., Lin, V. S. K., Valls, R., … McDonagh, E. M. (2021). Scaling national and international improvement in virtual gene panel curation via a collaborative approach to discordance resolution. The American Journal of Human Genetics, 108(9), 1551–1557. https://doi.org/10.1016/j.ajhg.2021.06.020
