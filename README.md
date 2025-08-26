@@ -66,7 +66,7 @@ Finally, while the entities are distributed across nearly the entire nuclear gen
 - **Gene Location Updates**: The locations of 87 (97%) genes were updated to align with RefSeq annotations.
 - **Strand Information Enrichment**: Strand information was added for 90 genes.
 
-## Usage
+## For developers
 
 ### Dependencies
 
