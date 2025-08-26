@@ -27,65 +27,40 @@ An **initial step** is to define a reproducible workflow for generating the init
 # TODO: I think it will be necessary to create a static assets directory. Results can change between releases..
 ```
 
-## File structure
-
-```
-# TODO: define what files worth include.
-
-# TODO: add with `tree --gitignore --dirsfirst .`
-```
-
-## Releases
-
-```
-# TODO: Define versioning
-# TODO: Explain clearly the release files
-# TODO: Add link to release page
-```
-
-## For developers
-
-```
-# TODO: explain the use of make for orchestration, automation and as a reproducibility layer.
-
-# TODO: maybe add a warning about fixing the Python build environment as another reproducibility layer.
-
-# TODO: probably I will need to mention why using a virtual environment in a container it is a good practice.
-```
+## Usage
 
 ### Dependencies
 
-```
-# TODO: Explain OS dependencies: make, python, jq, wget, md5sum and the use of  `make deps`
+This project is built for Linux and requires the GNU coreutils (e.g., cp, mkdir), **make**, and awk. If you run it locally, you will need additional dependencies, which you can list with ``make deps. Alternatively, you can build and run it inside a container. I provide make targets to build and deploy the Docker image, but experienced users may also use the Dockerfile to build a Singularity/Apptainer image.
 
-# TODO: Define how describe Python dependencies: Python version, pyproject.toml, requirements.txt. What are the use, what are locked.
-
+```bash
+make help # show options
 ```
 
 ### Linux local installation and setup
 
 ```bash
-make init
+make init ENV=prod #change to ENV=dev for development environment.
 make download-refseq
+make jupyter
 ```
 
-### Docker installation and setup
+### Docker build and setup
 
+```bash
+make docker-build
+make docker-serve
 ```
-# TODO: Pending evaluating if include Docker.
-```
+
+After serving, you can explore the notebook at http://localhost:8888/lab
 
 ## Limitations
 
-- Only tested on Linux.
+- **Data and coordinates verification**: PanelApp data uses two distinct data sources for Copy Number Variant (CNV) and Short Tandem Repeat (STR) entities, which introduces a potential for inconsistency. CNV data is sourced from ClinVar, while STR data is produced and curated via a Genomics England bioinformatics pipeline. To mitigate unexpected behavior during clinical testing, additional curation steps are needed to ensure that the coordinates of all genomic regions are fully compatible with the GCF_000001405.40 GRCh38.p14 reference assembly. This ensures data from different sources can be accurately integrated and analyzed.
 
-```
-# TODO: pending tests (?).
+- **Reference genome dependence**: the current methodology is anchored to the GRCh38 reference genome, and the Genome Reference Consortium (GRC) has not announced any plans for a new major release in the near future. While the T2T-CHM13 reference genome has demonstrated improved performance in some genomic analyses, transitioning to it would be challenging for clinical laboratories. Such a transition would require substantial adaptation of existing bioinformatics pipelines and the use of _liftover_ tools to convert coordinates from databases based on GRCh38, which could introduce additional layers of uncertainty.
 
-# TODO: mention that in a real lab setting it would be better to deploy an internal DB instead of parsing multiple times annotation files.
-
-# TODO: mention the problem of reproducibility with Docker (?) (depending on third-party images repositories, friction with IDEs, management of keys and Git)
-```
+- **Software testing**: as a prototype, the current project lacks a comprehensive testing framework. The absence of proper unit and integration tests poses a risk to the reliability and reproducibility of the results.
 
 ## Author
 
