@@ -45,6 +45,8 @@ This project provides a reproducible workflow to generate a virtual gene panel f
 
 - I used BEDOPS v2.4.41 (Neph et al., 2012) to validate the BED file format, merge any overlapping intervals, and ensure the coordinate systems were correct.
 
+- The exons has a padding of -16 and +5 to include the recommended minimum padding (Rehder et al., 2021) for exome approaches.
+
 ## Results (v.0.1.0)
 
 ![Fig1](assets/origin_and_consensus_counts_by_type.png)
