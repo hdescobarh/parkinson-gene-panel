@@ -1,11 +1,11 @@
 # Parkinson’s Disease Virtual Gene Panel
 
-[![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](./LICENSE)
+[![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-lightgreen.svg)](./LICENSE)
 [![License: CC BY 4.0](https://img.shields.io/badge/License-CC_BY_4.0-lightgreen.svg)](./LICENSE-CC)
-
-```
-# TODO: add language badges? Need to think what worths showing and not add noise...
-```
+![Python](https://img.shields.io/badge/Python-3.13-4584B6?logo=python&logoColor=white)
+![Make](https://img.shields.io/badge/Build-Makefile-4584B6?logo=gnu&logoColor=white)
+![Docker](https://img.shields.io/badge/Container-Docker-4584B6?logo=docker&logoColor=white)
+![Jupyter](https://img.shields.io/badge/Notebook-Jupyter-4584B6?logo=jupyter&logoColor=white)
 
 ## Description
 
