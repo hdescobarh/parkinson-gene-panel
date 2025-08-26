@@ -12,11 +12,14 @@ endif
 REQUIRED_TOOLS := python jq wget md5sum bedops
 OPTIONAL_TOOLS := git
 
+IMAGE_NAME = parkinson-gene-panel
+LABEL = portfolio=parkinson-gene-panel
+
 default: help
 .PHONY: help deps init install-dev install-prod \
 	prepare-workspace download-refseq \
 	clean clean-outputs clean-envs clean-stamps \
-	jupyter jupyter-root
+	jupyter jupyter-root docker-build docker_serve clean-docker
 
 ## This help screen.
 help:
@@ -125,6 +128,16 @@ requirements.txt: $(ROOT_DIR)/pyproject.toml | .venv-dev/.stamp
 	@echo "[MAKE] Creating requirements.txt..."
 	.venv-dev/bin/pip-compile -o "$@" "$<"
 
+## Build Docker production image
+docker-build:
+	@echo "[MAKE] Building production container..."
+	docker build --target production -t "$(IMAGE_NAME):prod" --label $(LABEL) .
+
+## Run production container and starts jupyter lab
+docker-serve:
+	@echo "[MAKE] Deploying service..."
+	docker run --rm --name $(IMAGE_NAME) -p "8888:8888" "$(IMAGE_NAME):prod"
+
 ## Remove all generated files, directories, and virtual environments.
 clean: clean-outputs clean-envs clean-stamps
 
@@ -155,3 +168,9 @@ clean-envs:
 
 clean-stamps:
 	rm -rf .stamps/
+
+clean-docker:
+	@echo "[MAKE] Removing project images..."
+	docker rmi $$(docker images --filter "label=$(LABEL)" -q) || true
+	@echo "[MAKE] Removing project volumes..."
+	docker volume rm $$(docker volume ls --filter "label=$(LABEL)" -q) || true
